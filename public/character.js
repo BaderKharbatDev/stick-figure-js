@@ -4,11 +4,11 @@ import { GUI } from '/dat.gui.module.js';
 let gui;
 
 class part {
-    constructor( mesh, children, distanceFromParent ) {
+    constructor( mesh, children ) {
         this.mesh = mesh;
         this.children = children;
         // this.mesh.position.set(position.x, position.y, position.z);
-        this.distanceFromParent = distanceFromParent
+        // this.distanceFromParent = distanceFromParent
     }
 }
 
@@ -71,27 +71,51 @@ export default class character {
         this.group = new THREE.Group();
         this.group.add(this.torso.mesh, this.head.mesh, this.neck.mesh, this.left_shoulder.mesh, this.right_shoulder.mesh, this.left_hip.mesh, this.right_hip.mesh, this.right_elbow.mesh, this.left_elbow.mesh, this.right_knee.mesh, this.left_knee.mesh, this.right_hand.mesh, this.left_hand.mesh, this.right_foot.mesh, this.left_foot.mesh)
         this.torso.mesh.visible = false
+        this.lines = [];
     }
 
     addToScene(scene) {
         scene.add(this.group)
+        this.scene = scene
+        this.drawCharacterLines(scene)
     }
 
-    
+    #makeLine(pos1, pos2) {
+        // let geometry = new THREE.LineGeometry();
+        // geometry.vertices.push(pos1);
+        // geometry.vertices.push(pos2);
+        let geometry = new THREE.BufferGeometry().setFromPoints( [pos1, pos2] );
+
+        let material = new THREE.LineBasicMaterial( { color: 0xFF0000, linewidth: 5 } );
+        let line = new THREE.Line(geometry, material);
+        this.lines.push(line)
+        return line;
+    }
+
     //helpers
+    drawCharacterLines(scene) {
+        //removes all lines
+        for(var i = 0; i<this.lines.length; i++) {
+            scene.remove(this.lines[i])
+        }
+
+        scene.add(this.#makeLine(this.right_foot.mesh.position, this.right_knee.mesh.position))
+        scene.add(this.#makeLine(this.right_knee.mesh.position, this.right_hip.mesh.position))
+        scene.add(this.#makeLine(this.left_foot.mesh.position, this.left_knee.mesh.position))
+        scene.add(this.#makeLine(this.left_knee.mesh.position, this.left_hip.mesh.position))
+        scene.add(this.#makeLine(this.right_shoulder.mesh.position, this.right_elbow.mesh.position))
+        scene.add(this.#makeLine(this.right_elbow.mesh.position, this.right_hand.mesh.position))
+        scene.add(this.#makeLine(this.left_shoulder.mesh.position, this.left_elbow.mesh.position))
+        scene.add(this.#makeLine(this.left_elbow.mesh.position, this.left_hand.mesh.position))
+        scene.add(this.#makeLine(this.neck.mesh.position, this.head.mesh.position))
+    }
+
     updateTorso() {
-        // var box = new THREE.Box3().setFromObject( points );
 
     }
 
     rotateTorso(axis, angle) {
-        axis.normalize();
-        this.constructor.rotateChildrenOfObject(this.torso, axis, angle)
-        console.log(axis)
-        // this.torso_wall.rotation.x += THREE.Math.degToRad(angle) * axis.x
-        // this.torso_wall.rotation.y += THREE.Math.degToRad(angle) * axis.y
-        // this.torso_wall.rotation.z += THREE.Math.degToRad(angle) * axis.z
-        // this.torso_wall.rotation.set
+        
     }
 
     static rotateAboutPoint(obj, point, axis, theta, pointIsWorld){
@@ -112,11 +136,12 @@ export default class character {
         obj.rotateOnAxis(new THREE.Vector3(0, 0, axis.z).normalize(), THREE.Math.degToRad(theta));
     }
     
-    static rotateChildrenOfObject(parentObject, axis, angle) {
+    static rotateChildrenOfObject(parentObject, axis, angle, character) {
         axis.normalize();
         for (let child of parentObject.children) {
             this.recursiveHelper(child, parentObject, axis, angle)
         }
+        character.drawCharacterLines(character.scene)
     }
     
     static recursiveHelper(object, pivotObject, axis, angle) {
@@ -130,15 +155,25 @@ export default class character {
         this.rotateAboutPoint(rotatingObject.mesh, pivotObject.mesh.position, axis, THREE.Math.degToRad(angle)) 
     }
 
-    static openMenu(part) {
+    static openMenu(character, obj) {
+        let this_class = this;
+
+        var part;
+        for (var key in character) {
+            if(character[key].mesh != null && character[key].mesh == obj) {
+                part = character[key];
+                break
+            }
+        }
+
         gui = new GUI();
         const xFolder = gui.addFolder('X Axis')
         var x = { 
-            AnglePos:function(){
-
+            AnglePos:function() {
+                this_class.rotateChildrenOfObject(part, new THREE.Vector3(1, 0, 0), 10, character)
             },
-            AngleNeg:function(){
-
+            AngleNeg:function() {
+                this_class.rotateChildrenOfObject(part, new THREE.Vector3(1, 0, 0), -10, character)
             }
         };
         xFolder.add(x, 'AnglePos')
@@ -146,10 +181,10 @@ export default class character {
         const yFolder = gui.addFolder('Y Axis')
         var y = { 
             AnglePos:function(){
-
+                this_class.rotateChildrenOfObject(part, new THREE.Vector3(0, 1, 0), 10, character)
             },
             AngleNeg:function(){
-
+                this_class.rotateChildrenOfObject(part, new THREE.Vector3(0, 1, 0), -10, character)
             }
         };
         yFolder.add(y, 'AnglePos')
@@ -157,10 +192,10 @@ export default class character {
         const zFolder = gui.addFolder('Z Axis')
         var z = { 
             AnglePos:function(){
-
+                this_class.rotateChildrenOfObject(part, new THREE.Vector3(0, 0, 1), 10, character)
             },
             AngleNeg:function(){
-
+                this_class.rotateChildrenOfObject(part, new THREE.Vector3(0, 0, 1), -10, character)
             }
         };
         zFolder.add(z, 'AnglePos')
@@ -172,7 +207,6 @@ export default class character {
 
     static closeMenu() {
         gui.destroy();
-        // GUI.toggleHide();
     }
 }
 

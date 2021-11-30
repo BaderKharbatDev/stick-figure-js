@@ -31,7 +31,6 @@ scene.add(light, light2)
 //adds character
 var character = new Character();
 character.addToScene(scene);
-character.head.mesh.callback = function() { console.log( 'head clicked' ); }
 
 //floor
 function addPlane() {
@@ -75,10 +74,10 @@ function onDocumentMouseDown( event ) {
           selected_obj = intersects[0].object;
           old_color = JSON.parse(JSON.stringify(selected_obj.material.color));
           selected_obj.material.color.setHex(0x000000);
-          Character.openMenu(selected_obj);
+          Character.openMenu(character, selected_obj);
         }
       } catch (error) {
-        // console.log(error)
+        console.log(error)
       }
     }
 }
