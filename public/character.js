@@ -57,33 +57,21 @@ export default class character {
         this.neck.mesh.position.set(0,this.left_hip.mesh.position.y+tor_h,0);
         this.head.mesh.position.set(0,this.neck.mesh.position.y+arm_d,0);
 
-        // var plane = new THREE.PlaneGeometry( tor_w, tor_h, 1 );
-        // this.torso_wall = new THREE.Mesh( plane, new THREE.MeshBasicMaterial( { color: 0x00ff00, side: THREE.DoubleSide} ) );
-        // this.torso_wall.position.set(this.torso.mesh.position.x, this.torso.mesh.position.y, this.torso.mesh.position.z);
-
-        // var plane = new THREE.Plane();
-        // plane.setFromCoplanarPoints(new THREE.Vector3(),new THREE.Vector3(),new THREE.Vector3())
-        // var geometry = new THREE.PlaneGeometry(100, 100);
-        // var mesh = new THREE.Mesh(geometry, new THREE.MeshStandardMaterial({ color: 0xFF6347 }));
-        // mesh.translate(plane.coplanarPoint());
-        // mesh.quaternion.setFromUnitVectors(new THREE.Vector3(0,0,1), plane.normal);
-
         this.group = new THREE.Group();
         this.group.add(this.torso.mesh, this.head.mesh, this.neck.mesh, this.left_shoulder.mesh, this.right_shoulder.mesh, this.left_hip.mesh, this.right_hip.mesh, this.right_elbow.mesh, this.left_elbow.mesh, this.right_knee.mesh, this.left_knee.mesh, this.right_hand.mesh, this.left_hand.mesh, this.right_foot.mesh, this.left_foot.mesh)
         this.torso.mesh.visible = false
         this.lines = [];
+        this.torso_mesh;
     }
 
     addToScene(scene) {
         scene.add(this.group)
         this.scene = scene
-        this.drawCharacterLines(scene)
+        this.drawCharacterLines()
+        this.updateTorso()
     }
 
     #makeLine(pos1, pos2) {
-        // let geometry = new THREE.LineGeometry();
-        // geometry.vertices.push(pos1);
-        // geometry.vertices.push(pos2);
         let geometry = new THREE.BufferGeometry().setFromPoints( [pos1, pos2] );
 
         let material = new THREE.LineBasicMaterial( { color: 0xFF0000, linewidth: 5 } );
@@ -92,8 +80,9 @@ export default class character {
         return line;
     }
 
-    //helpers
-    drawCharacterLines(scene) {
+    //character drawing helpers
+    drawCharacterLines() {
+        let scene = this.scene;
         //removes all lines
         for(var i = 0; i<this.lines.length; i++) {
             scene.remove(this.lines[i])
@@ -111,11 +100,59 @@ export default class character {
     }
 
     updateTorso() {
-
+        //first remove previous plane
+        let scene = this.scene;
+        scene.remove(this.torso_mesh)
+        this.torso_mesh = this.makeNewTorsoPlane(this.left_shoulder.mesh.position, this.left_hip.mesh.position, this.right_hip.mesh.position)
+        this.scene.add(this.torso_mesh)
     }
 
-    rotateTorso(axis, angle) {
+    makeNewTorsoPlane(p0, p1, p2) {
+        var material2 = new THREE.LineBasicMaterial({
+            color: 0x0000ff
+        });
         
+        // get direction of line p0-p1
+        var direction = p1.clone().sub(p0).normalize();
+        
+        // project p2 on line p0-p1
+        var line0 = new THREE.Line3(p0, p1);
+        var proj = new THREE.Vector3();
+        line0.closestPointToPoint(p2, true, proj);
+        
+        // get plane side direction
+        var localUp = p2.clone().sub(proj).normalize();
+        
+        // calc plane normal vector (how we want plane to direct)
+        var n = new THREE.Vector3();
+        n.crossVectors(proj.clone().sub(p0), proj.clone().sub(p2));
+        
+        // preparation is complete, create a plane now
+        const planeL = 50//2.15;
+        const planeW = 30//1.75;
+        
+        var geometry = new THREE.PlaneGeometry(planeL, planeW, 32);
+        var material3 = new THREE.MeshStandardMaterial({
+            color: 0xFF6347,
+            side: THREE.DoubleSide
+        });
+        var plane = new THREE.Mesh(geometry, material3);
+        
+        // now align the plane to the p0-p1 in direction p2
+        plane.position.copy(p0); //put plane by its center on p0
+        plane.up.copy(localUp); //adjust .up for future .lookAt call
+        plane.lookAt(p0.clone().add(n)); //rotate plane
+        
+        // now just offset plane by half width and half height
+        plane.position.add(localUp.clone().multiplyScalar(planeW / 2));
+        plane.position.add(direction.clone().multiplyScalar(planeL / 2));
+        return plane
+    }
+
+
+    //rotation helpers
+    rotateTorso(axis, angle) {
+        rotateChildrenOfObject(this.torso, axis, angle, children)
     }
 
     static rotateAboutPoint(obj, point, axis, theta, pointIsWorld){
@@ -141,7 +178,8 @@ export default class character {
         for (let child of parentObject.children) {
             this.recursiveHelper(child, parentObject, axis, angle)
         }
-        character.drawCharacterLines(character.scene)
+        character.drawCharacterLines()
+        character.updateTorso()
     }
     
     static recursiveHelper(object, pivotObject, axis, angle) {
@@ -155,6 +193,7 @@ export default class character {
         this.rotateAboutPoint(rotatingObject.mesh, pivotObject.mesh.position, axis, THREE.Math.degToRad(angle)) 
     }
 
+    //menu methods
     static openMenu(character, obj) {
         let this_class = this;
 
