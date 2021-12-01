@@ -21,21 +21,21 @@ export default class character {
         let tor_h = 50;
 
         this.right_hand = new part( new THREE.Mesh( new THREE.SphereGeometry(radius, 24, 24), new THREE.MeshStandardMaterial({ color: 0x0000FF}) ), []);
-        this.left_hand = new part( new THREE.Mesh( new THREE.SphereGeometry(radius, 24, 24), new THREE.MeshStandardMaterial({ color: 0xFF6347}) ), []);
+        this.left_hand = new part( new THREE.Mesh( new THREE.SphereGeometry(radius, 24, 24), new THREE.MeshStandardMaterial({ color: 0xadd8e6}) ), []);
         this.right_foot = new part( new THREE.Mesh( new THREE.SphereGeometry(radius, 24, 24), new THREE.MeshStandardMaterial({ color: 0x0000FF}) ), []);
-        this.left_foot = new part( new THREE.Mesh( new THREE.SphereGeometry(radius, 24, 24), new THREE.MeshStandardMaterial({ color: 0xFF6347}) ), []);
+        this.left_foot = new part( new THREE.Mesh( new THREE.SphereGeometry(radius, 24, 24), new THREE.MeshStandardMaterial({ color: 0xadd8e6}) ), []);
         
-        this.right_elbow = new part( new THREE.Mesh( new THREE.SphereGeometry(radius, 24, 24), new THREE.MeshStandardMaterial({ color: 0xFF6347}) ), [this.right_hand]);
-        this.left_elbow = new part( new THREE.Mesh( new THREE.SphereGeometry(radius, 24, 24), new THREE.MeshStandardMaterial({ color: 0xFF6347}) ), [this.left_hand]);
-        this.right_knee = new part( new THREE.Mesh( new THREE.SphereGeometry(radius, 24, 24), new THREE.MeshStandardMaterial({ color: 0xFF6347}) ), [this.right_foot]);
-        this.left_knee = new part( new THREE.Mesh( new THREE.SphereGeometry(radius, 24, 24), new THREE.MeshStandardMaterial({ color: 0xFF6347}) ), [this.left_foot]);
+        this.right_elbow = new part( new THREE.Mesh( new THREE.SphereGeometry(radius, 24, 24), new THREE.MeshStandardMaterial({ color: 0xadd8e6}) ), [this.right_hand]);
+        this.left_elbow = new part( new THREE.Mesh( new THREE.SphereGeometry(radius, 24, 24), new THREE.MeshStandardMaterial({ color: 0xadd8e6}) ), [this.left_hand]);
+        this.right_knee = new part( new THREE.Mesh( new THREE.SphereGeometry(radius, 24, 24), new THREE.MeshStandardMaterial({ color: 0xadd8e6}) ), [this.right_foot]);
+        this.left_knee = new part( new THREE.Mesh( new THREE.SphereGeometry(radius, 24, 24), new THREE.MeshStandardMaterial({ color: 0xadd8e6}) ), [this.left_foot]);
         
-        this.left_hip = new part(new THREE.Mesh( new THREE.SphereGeometry(radius, 24, 24), new THREE.MeshStandardMaterial({ color: 0xFF6347 }) ), [this.left_knee]);
-        this.right_hip = new part(new THREE.Mesh( new THREE.SphereGeometry(radius, 24, 24), new THREE.MeshStandardMaterial({ color: 0xFF6347 }) ), [this.right_knee]);
-        this.left_shoulder = new part(new THREE.Mesh( new THREE.SphereGeometry(radius, 24, 24), new THREE.MeshStandardMaterial({ color: 0xFF6347 }) ), [this.left_elbow]);
-        this.right_shoulder = new part(new THREE.Mesh( new THREE.SphereGeometry(radius, 24, 24), new THREE.MeshStandardMaterial({ color: 0xFF6347 }) ), [this.right_elbow]);
-        this.head = new part(new THREE.Mesh( new THREE.SphereGeometry(7, 24, 24), new THREE.MeshStandardMaterial({ color: 0xFF6347 }) ), []);
-        this.neck = new part(new THREE.Mesh( new THREE.SphereGeometry(radius, 24, 24), new THREE.MeshStandardMaterial({ color: 0xFF6347 }) ), [this.head]);
+        this.left_hip = new part(new THREE.Mesh( new THREE.SphereGeometry(radius, 24, 24), new THREE.MeshStandardMaterial({ color: 0xadd8e6 }) ), [this.left_knee]);
+        this.right_hip = new part(new THREE.Mesh( new THREE.SphereGeometry(radius, 24, 24), new THREE.MeshStandardMaterial({ color: 0xadd8e6 }) ), [this.right_knee]);
+        this.left_shoulder = new part(new THREE.Mesh( new THREE.SphereGeometry(radius, 24, 24), new THREE.MeshStandardMaterial({ color: 0xadd8e6 }) ), [this.left_elbow]);
+        this.right_shoulder = new part(new THREE.Mesh( new THREE.SphereGeometry(radius, 24, 24), new THREE.MeshStandardMaterial({ color: 0xadd8e6 }) ), [this.right_elbow]);
+        this.head = new part(new THREE.Mesh( new THREE.SphereGeometry(7, 24, 24), new THREE.MeshStandardMaterial({ color: 0xadd8e6 }) ), []);
+        this.neck = new part(new THREE.Mesh( new THREE.SphereGeometry(radius, 24, 24), new THREE.MeshStandardMaterial({ color: 0xadd8e6 }) ), [this.head]);
 
         this.torso = new part(new THREE.Mesh( new THREE.SphereGeometry( radius, 24, 24 ), new THREE.MeshStandardMaterial( {color: 0xffd100} ) ), [this.neck, this.left_shoulder, this.right_shoulder, this.left_hip, this.right_hip])
 
@@ -71,9 +71,12 @@ export default class character {
     }
 
     #makeLine(pos1, pos2) {
+        pos1 = new THREE.Vector3(parseFloat(pos1.x), parseFloat(pos1.y), parseFloat(pos1.z) )
+        pos2 = new THREE.Vector3(parseFloat(pos2.x), parseFloat(pos2.y), parseFloat(pos2.z) )
+
         let geometry = new THREE.BufferGeometry().setFromPoints( [pos1, pos2] );
 
-        let material = new THREE.LineBasicMaterial( { color: 0xFF0000, linewidth: 5 } );
+        let material = new THREE.LineBasicMaterial( { color: 0x000000 } );
         let line = new THREE.Line(geometry, material);
         this.lines.push(line)
         return line;
@@ -133,7 +136,7 @@ export default class character {
         
         var geometry = new THREE.PlaneGeometry(planeL, planeW, 32);
         var material3 = new THREE.MeshStandardMaterial({
-            color: 0xFF6347,
+            color: 0xadd8e6,
             side: THREE.DoubleSide
         });
         var plane = new THREE.Mesh(geometry, material3);

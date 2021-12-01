@@ -82,7 +82,7 @@ function onDocumentMouseDown( event ) {
           character.openMenu(selected_obj);
         }
       } catch (error) {
-        console.log(error)
+        // console.log(error)
       }
     }
     if(character.circleMenu.length > 0) {
@@ -172,33 +172,10 @@ controls.target = character.torso.mesh.position
 controls.enablePan = false;
 controls.update
 
-// document.addEventListener("keydown", onDocumentKeyDown, false);
-// function onDocumentKeyDown(event) {
-//     var keyCode = event.which;
-//     if (keyCode == 87) { //w
-//       character.rotateTorso(new THREE.Vector3(1, 0, 0), -10)
-//     } else if (keyCode == 83) { //s
-//       character.rotateTorso(new THREE.Vector3(1, 0, 0), 10)
-//     } else if (keyCode == 65) { //a
-//       character.rotateTorso(new THREE.Vector3(0, 1, 0), -10)
-//     } else if (keyCode == 68) { //d
-//       character.rotateTorso(new THREE.Vector3(0, 1, 0), 10)
-//     }
-// };
-
 function animate() {
   requestAnimationFrame(animate);
 
-  // Character.rotateChildrenOfObject(character.torso, new THREE.Vector3(1, 1, 0), -2, character)
 
-  // character.updateTorso(scene)
-
-  // character.torso.mesh.rotateOnAxis(new THREE.Vector3(0, 1, 0), THREE.Math.degToRad(5));
-  // character.torso.mesh.rotateOnAxis(new THREE.Vector3(1, 0, 0), THREE.Math.degToRad(5));
-
-  // character.rotateBody(new THREE.Vector3(1, 1, 0), -2)
-  // Character.rotateChildrenOfObject(character.right_shoulder, new THREE.Vector3(1, 1, 0), -5);
-  // Character.rotateChildrenOfObject(character.torso, new THREE.Vector3(1, 1, 0), -5);
 
   controls.update();
   renderer.render(scene, camera);
