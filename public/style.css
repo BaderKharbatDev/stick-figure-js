@@ -25,3 +25,5 @@ html {
   top: 0;
   left: 0;
 }
+
+#frame-gui { position: absolute; top: 2px; left: 2px }

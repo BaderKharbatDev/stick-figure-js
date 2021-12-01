@@ -107,7 +107,9 @@ export default class character {
     updateTorso() {
         //first remove previous plane
         let scene = this.scene;
-        scene.remove(this.torso_mesh)
+        try {
+            scene.remove(this.torso_mesh)
+        } catch(error) {}
         this.torso_mesh = this.makeNewTorsoPlane(this.left_shoulder.mesh.position, this.left_hip.mesh.position, this.right_hip.mesh.position)
         this.torso_mesh.frustumCulled=false
         this.scene.add(this.torso_mesh)
@@ -135,7 +137,7 @@ export default class character {
         
         // preparation is complete, create a plane now
         const planeL = 50//2.15;
-        const planeW = 30//1.75;
+        const planeW = 27//1.75;
         
         var geometry = new THREE.PlaneGeometry(planeL, planeW, 32);
         var material3 = new THREE.MeshStandardMaterial({
@@ -273,7 +275,9 @@ export default class character {
 
     closeMenu(scene) {
         this.closeAxisMenu(scene)
-        this.gui.destroy();
+        if(this.gui) {
+            this.gui.domElement.remove();
+        }
     }
 
     static createCircle(scene, size, color, xR, yR, zR, x, y, z, name) {
@@ -305,11 +309,64 @@ export default class character {
         this.circleMenu.push( this.constructor.createCircle(scene, 10, green, Math.PI / 2, 0, 0, part.mesh.position.x, part.mesh.position.y, part.mesh.position.z, 'y'))
     }
 
-    closeAxisMenu(scene) {
+    closeAxisMenu() {
+        var scene = this.scene
         for(var i = 0; i<this.circleMenu.length; i++) {
             scene.remove(this.circleMenu[i])
         }
         this.circleMenu = [];
+    }
+
+    posHelper(pos) {
+        return new THREE.Vector3(pos.x, pos.y, pos.z)
+    }
+
+    getPlayerJointPositions() {
+        return {
+            'left_foot': new THREE.Vector3(this.left_foot.mesh.position.x, this.left_foot.mesh.position.y, this.left_foot.mesh.position.z),
+            'right_foot': new THREE.Vector3(this.right_foot.mesh.position.x, this.right_foot.mesh.position.y, this.right_foot.mesh.position.z),
+            'left_knee': new THREE.Vector3(this.left_knee.mesh.position.x, this.left_knee.mesh.position.y, this.left_knee.mesh.position.z),
+            'right_knee': new THREE.Vector3(this.right_knee.mesh.position.x, this.right_knee.mesh.position.y, this.right_knee.mesh.position.z),
+            'left_hip': new THREE.Vector3(this.left_hip.mesh.position.x, this.left_hip.mesh.position.y, this.left_hip.mesh.position.z),
+            'right_hip': new THREE.Vector3(this.right_hip.mesh.position.x, this.right_hip.mesh.position.y, this.right_hip.mesh.position.z),
+            'torso': new THREE.Vector3(this.torso.mesh.position.x, this.torso.mesh.position.y, this.torso.mesh.position.z),
+            'left_shoulder': new THREE.Vector3(this.left_shoulder.mesh.position.x, this.left_shoulder.mesh.position.y, this.left_shoulder.mesh.position.z),
+            'right_shoulder': new THREE.Vector3(this.right_shoulder.mesh.position.x, this.right_shoulder.mesh.position.y, this.right_shoulder.mesh.position.z),
+            'left_elbow': new THREE.Vector3(this.left_elbow.mesh.position.x, this.left_elbow.mesh.position.y, this.left_elbow.mesh.position.z),
+            'right_elbow': new THREE.Vector3(this.right_elbow.mesh.position.x, this.right_elbow.mesh.position.y, this.right_elbow.mesh.position.z),
+            'left_hand': new THREE.Vector3(this.left_hand.mesh.position.x, this.left_hand.mesh.position.y, this.left_hand.mesh.position.z),
+            'right_hand': new THREE.Vector3(this.right_hand.mesh.position.x, this.right_hand.mesh.position.y, this.right_hand.mesh.position.z),
+            'neck': new THREE.Vector3(this.neck.mesh.position.x, this.neck.mesh.position.y, this.neck.mesh.position.z),
+            'head': new THREE.Vector3(this.head.mesh.position.x, this.head.mesh.position.y, this.head.mesh.position.z)
+        }
+    }
+
+    changePartPos(mesh, position) {
+        mesh.position.x = position.x;
+        mesh.position.y = position.y;
+        mesh.position.z = position.z;
+    }
+
+    applyNewPlayerPosition(newPositions) {
+        this.closeMenu()
+        this.changePartPos(this.left_foot.mesh, newPositions['left_foot'])
+        this.changePartPos(this.right_foot.mesh, newPositions['right_foot'])
+        this.changePartPos(this.left_knee.mesh, newPositions['left_knee'])
+        this.changePartPos(this.right_knee.mesh, newPositions['right_knee'])
+        this.changePartPos(this.left_hip.mesh, newPositions['left_hip'])
+        this.changePartPos(this.right_hip.mesh, newPositions['right_hip'])
+        this.changePartPos(this.torso.mesh, newPositions['torso'])
+        this.changePartPos(this.left_shoulder.mesh, newPositions['left_shoulder'])
+        this.changePartPos(this.right_shoulder.mesh, newPositions['right_shoulder'])
+        this.changePartPos(this.left_elbow.mesh, newPositions['left_elbow'])
+        this.changePartPos(this.right_elbow.mesh, newPositions['right_elbow'])
+        this.changePartPos(this.left_hand.mesh, newPositions['left_hand'])
+        this.changePartPos(this.right_hand.mesh, newPositions['right_hand'])
+        this.changePartPos(this.neck.mesh, newPositions['neck'])
+        this.changePartPos(this.head.mesh, newPositions['head'])
+
+        this.drawCharacterLines()
+        this.updateTorso()
     }
 }
 
