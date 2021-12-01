@@ -1,18 +1,17 @@
 import * as THREE from '/build/three.module.js';
 import { GUI } from '/dat.gui.module.js';
 
-let gui;
 
 class part {
     constructor( mesh, children ) {
         this.mesh = mesh;
         this.children = children;
-        // this.mesh.position.set(position.x, position.y, position.z);
-        // this.distanceFromParent = distanceFromParent
     }
 }
 
 export default class character {
+    gui;
+    circleMenu = [];
 
     constructor() {
         let radius = 3;
@@ -87,6 +86,7 @@ export default class character {
         for(var i = 0; i<this.lines.length; i++) {
             scene.remove(this.lines[i])
         }
+        this.lines = [];
 
         scene.add(this.#makeLine(this.right_foot.mesh.position, this.right_knee.mesh.position))
         scene.add(this.#makeLine(this.right_knee.mesh.position, this.right_hip.mesh.position))
@@ -149,12 +149,6 @@ export default class character {
         return plane
     }
 
-
-    //rotation helpers
-    rotateTorso(axis, angle) {
-        rotateChildrenOfObject(this.torso, axis, angle, children)
-    }
-
     static rotateAboutPoint(obj, point, axis, theta, pointIsWorld){
         axis.normalize();
 
@@ -194,19 +188,22 @@ export default class character {
     }
 
     //menu methods
-    static openMenu(character, obj) {
-        let this_class = this;
-
+    openMenu( obj) {
+        let this_class = this.constructor;
+        var character = this;
+        
         var part;
         for (var key in character) {
-            if(character[key].mesh != null && character[key].mesh == obj) {
+            if(character[key] != null && character[key].mesh != null && character[key].mesh == obj) {
                 part = character[key];
                 break
             }
         }
 
-        gui = new GUI();
-        const xFolder = gui.addFolder('X Axis')
+        this.makeAxisMenu(character.scene, part)
+
+        this.gui = new GUI();
+        const xFolder = this.gui.addFolder('X Axis')
         var x = { 
             AnglePos:function() {
                 this_class.rotateChildrenOfObject(part, new THREE.Vector3(1, 0, 0), 10, character)
@@ -217,7 +214,7 @@ export default class character {
         };
         xFolder.add(x, 'AnglePos')
         xFolder.add(x, 'AngleNeg')
-        const yFolder = gui.addFolder('Y Axis')
+        const yFolder = this.gui.addFolder('Y Axis')
         var y = { 
             AnglePos:function(){
                 this_class.rotateChildrenOfObject(part, new THREE.Vector3(0, 1, 0), 10, character)
@@ -228,7 +225,7 @@ export default class character {
         };
         yFolder.add(y, 'AnglePos')
         yFolder.add(y, 'AngleNeg')
-        const zFolder = gui.addFolder('Z Axis')
+        const zFolder = this.gui.addFolder('Z Axis')
         var z = { 
             AnglePos:function(){
                 this_class.rotateChildrenOfObject(part, new THREE.Vector3(0, 0, 1), 10, character)
@@ -244,12 +241,46 @@ export default class character {
         zFolder.open()
     }
 
-    static closeMenu() {
-        gui.destroy();
+    closeMenu(scene) {
+        this.closeAxisMenu(scene)
+        this.gui.destroy();
+    }
+
+    static createCircle(scene, size, color, xR, yR, zR, x, y, z, name) {
+      const geometry = new THREE.CircleGeometry( size, 100 );
+      const material = new THREE.MeshBasicMaterial( { color: color, side: THREE.DoubleSide, transparent: true, opacity: 0.7} );
+      const circle = new THREE.Mesh( geometry, material );
+      circle.position.set(x, y, z)
+      circle.rotation.x = xR
+      circle.rotation.y = yR
+      circle.rotation.z = zR
+      circle.name = name
+      scene.add( circle );
+      return circle
+    }
+
+
+    makeAxisMenu(scene, part) {
+        for(var i = 0; i < this.circleMenu.length; i++) {
+            scene.remove(this.circleMenu[i])
+        }
+        this.circleMenu = [];
+
+        let blue = 0x0000FF;
+        let red = 0xFF0000;
+        let green = 0x00FF00;
+        this.circleMenu.push( this.constructor.createCircle(scene, 10, blue, 0, 0, Math.PI / 2, part.mesh.position.x, part.mesh.position.y, part.mesh.position.z, 'z'))
+        this.circleMenu.push( this.constructor.createCircle(scene, 10, red, 0, Math.PI / 2, 0, part.mesh.position.x, part.mesh.position.y, part.mesh.position.z, 'x'))
+        this.circleMenu.push( this.constructor.createCircle(scene, 10, green, Math.PI / 2, 0, 0, part.mesh.position.x, part.mesh.position.y, part.mesh.position.z, 'y'))
+    }
+
+    closeAxisMenu(scene) {
+        for(var i = 0; i<this.circleMenu.length; i++) {
+            scene.remove(this.circleMenu[i])
+        }
+        this.circleMenu = [];
     }
 }
-
-
 
 
 

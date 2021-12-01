@@ -2,7 +2,8 @@ import * as THREE from '/build/three.module.js';
 import { OrbitControls } from '/jsm/controls/OrbitControls.js';
 import "/jsm/libs/stats.module.js";
 import Character from '/character.js';
-import { GUI } from '/dat.gui.module.js';
+import Helper from './helper.js'
+// import {gui, circleMenu} from '/character.js';
 
 //init
 const scene = new THREE.Scene();
@@ -52,6 +53,10 @@ var mouse = new THREE.Vector2();
 
 var selected_obj = null;
 var old_color = null;
+var isDragging = false;
+var lastClickPos;
+var partClickPos;
+var axis_name;
 
 function onDocumentMouseDown( event ) {
     event.preventDefault();
@@ -63,45 +68,109 @@ function onDocumentMouseDown( event ) {
       try {
         if(selected_obj != null) {
           selected_obj.material.color.setHex(old_color)
-          Character.closeMenu();
+          character.closeMenu(scene);
         }
         if(intersects[0].object == selected_obj) {
           selected_obj.material.color.setHex(old_color)
           selected_obj = null;
           old_color = null;
-          Character.closeMenu();
+          character.closeMenu(scene);
         } else {
           selected_obj = intersects[0].object;
           old_color = JSON.parse(JSON.stringify(selected_obj.material.color));
           selected_obj.material.color.setHex(0x000000);
-          Character.openMenu(character, selected_obj);
+          character.openMenu(selected_obj);
         }
       } catch (error) {
         console.log(error)
       }
     }
+    if(character.circleMenu.length > 0) {
+      var intersectsAxisMenu = raycaster.intersectObjects( character.circleMenu );
+      if( intersectsAxisMenu.length > 0) {
+        controls.enabled = false;
+        isDragging = true;
+
+        axis_name = intersectsAxisMenu[0].object.name
+
+        lastClickPos = {
+          x: event.offsetX,
+          y: event.offsetY
+        };
+        partClickPos = Helper.toScreenPosition(new THREE.Vector3(selected_obj.position.x, selected_obj.position.y, selected_obj.position.z), camera)
+      }
+    }
 }
 window.addEventListener('mousedown', onDocumentMouseDown)
+function onDocumentMouseUp( event ) {
+  if(isDragging) isDragging = false;
+  controls.enabled = true;
+}
+window.addEventListener('mouseup', onDocumentMouseUp)
+
+var lastMove = 0;
+function onDocumentMouseMove( event ) {
+  if(!isDragging) return
+
+  if(Date.now() - lastMove > 50) {
+      //move arm
+      let newPos = {
+        x: event.offsetX,
+        y: event.offsetY
+      };
+  
+      var old_dir = new THREE.Vector2(); // create once an reuse it
+      old_dir.subVectors( new THREE.Vector2(partClickPos.x,partClickPos.y), new THREE.Vector2(lastClickPos.x, lastClickPos.y)).normalize(); 
+      var new_dir = new THREE.Vector2(); // create once an reuse it
+      new_dir.subVectors( new THREE.Vector2(partClickPos.x, partClickPos.y), new THREE.Vector2(newPos.x, newPos.y)).normalize(); 
+  
+      var cosAB = old_dir.dot( new_dir );
+      var angle_in_radians = Math.acos( cosAB );
+      var direction = (( old_dir.cross( new_dir ) < 0) ? 1 : -1);
+
+      var part;
+      for (var key in character) {
+          if(character[key] != null && character[key].mesh != null && character[key].mesh == selected_obj) {
+              part = character[key];
+              break
+          }
+      }
+
+      var vector = new THREE.Vector3();
+      var camera_vector = camera.getWorldDirection(vector);
+
+      //rotate according to the axis
+      switch(axis_name) {
+        case 'x':
+          if(camera_vector.x > 0) direction = direction * -1
+          Character.rotateChildrenOfObject(part, new THREE.Vector3(1, 0, 0), direction*THREE.Math.radToDeg(angle_in_radians), character)
+          break;
+        case 'y':
+          if(camera_vector.y > 0) direction = direction * -1
+          Character.rotateChildrenOfObject(part, new THREE.Vector3(0, 1, 0), direction*THREE.Math.radToDeg(angle_in_radians), character)
+          break;
+        case 'z':
+          if(camera_vector.z > 0) direction = direction * -1
+          Character.rotateChildrenOfObject(part, new THREE.Vector3(0, 0, 1), direction*THREE.Math.radToDeg(angle_in_radians), character)
+          break;
+      }
+  
+      if(newPos.x == lastClickPos.x && newPos.y == lastClickPos.y) {
+        //
+      } else {
+        lastClickPos = newPos
+      }
+
+    lastMove = Date.now();
+  } 
+}
+window.addEventListener('mousemove', onDocumentMouseMove)
 
 //controls
 var controls = new OrbitControls(camera, renderer.domElement)
 controls.target = character.torso.mesh.position
 controls.enablePan = false;
 controls.update
-
-// function createCircle(size, color, xR, yR, zR, x, y, z) {
-//   const geometry = new THREE.CircleGeometry( size, 100 );
-//   const material = new THREE.MeshBasicMaterial( { color: color, side: THREE.DoubleSide } );
-//   const circle = new THREE.Mesh( geometry, material );
-//   circle.position.set(x, y, z)
-//   circle.rotation.x = xR
-//   circle.rotation.y = yR
-//   circle.rotation.z = zR
-//   scene.add( circle );
-// }
-// createCircle(10, 0x87ff00, 0, 0, Math.PI / 2, character.right_shoulder.mesh.position.x, character.right_shoulder.mesh.position.y, character.right_shoulder.mesh.position.z)
-// createCircle(10, 0xff0000, 0, Math.PI / 2, 0, character.right_shoulder.mesh.position.x, character.right_shoulder.mesh.position.y, character.right_shoulder.mesh.position.z)
-// createCircle(10, 0x3e00ff, Math.PI / 2, 0, 0, character.right_shoulder.mesh.position.x, character.right_shoulder.mesh.position.y, character.right_shoulder.mesh.position.z)
 
 // document.addEventListener("keydown", onDocumentKeyDown, false);
 // function onDocumentKeyDown(event) {
@@ -117,12 +186,10 @@ controls.update
 //     }
 // };
 
-//slider
-// var slider = document.getElementById("slider");
-// slider.addEventListener("input", null);
-
 function animate() {
   requestAnimationFrame(animate);
+
+  // Character.rotateChildrenOfObject(character.torso, new THREE.Vector3(1, 1, 0), -2, character)
 
   // character.updateTorso(scene)
 
