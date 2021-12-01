@@ -107,7 +107,7 @@ function onDocumentMouseDown( event ) {
             character.openMenu(selected_obj);
           }
         } catch (error) {
-          // console.log(error)
+          console.log(error)
         }
     }
 }
