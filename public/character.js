@@ -58,7 +58,8 @@ export default class character {
 
         this.group = new THREE.Group();
         this.group.add(this.torso.mesh, this.head.mesh, this.neck.mesh, this.left_shoulder.mesh, this.right_shoulder.mesh, this.left_hip.mesh, this.right_hip.mesh, this.right_elbow.mesh, this.left_elbow.mesh, this.right_knee.mesh, this.left_knee.mesh, this.right_hand.mesh, this.left_hand.mesh, this.right_foot.mesh, this.left_foot.mesh)
-        this.torso.mesh.visible = false
+        this.group.frustumCulled=false
+        // this.torso.mesh.visible = false
         this.lines = [];
         this.torso_mesh;
     }
@@ -78,6 +79,7 @@ export default class character {
 
         let material = new THREE.LineBasicMaterial( { color: 0x000000 } );
         let line = new THREE.Line(geometry, material);
+        line.frustumCulled=false
         this.lines.push(line)
         return line;
     }
@@ -107,6 +109,7 @@ export default class character {
         let scene = this.scene;
         scene.remove(this.torso_mesh)
         this.torso_mesh = this.makeNewTorsoPlane(this.left_shoulder.mesh.position, this.left_hip.mesh.position, this.right_hip.mesh.position)
+        this.torso_mesh.frustumCulled=false
         this.scene.add(this.torso_mesh)
     }
 
@@ -149,6 +152,7 @@ export default class character {
         // now just offset plane by half width and half height
         plane.position.add(localUp.clone().multiplyScalar(planeW / 2));
         plane.position.add(direction.clone().multiplyScalar(planeL / 2));
+        plane.frustumCulled=false
         return plane
     }
 
@@ -188,6 +192,17 @@ export default class character {
     
     static rotateObjectAroundObject(rotatingObject, pivotObject, axis, angle) {
         this.rotateAboutPoint(rotatingObject.mesh, pivotObject.mesh.position, axis, THREE.Math.degToRad(angle)) 
+    }
+
+    moveCharacterUpOrDown(val) {
+        this.group.children.forEach(element => {
+            element.position.y += val
+        });
+        for(var i = 0; i<this.circleMenu.length; i++) {
+            this.circleMenu[i].position.y += val
+        }
+        this.drawCharacterLines()
+        this.updateTorso()
     }
 
     //menu methods
@@ -242,6 +257,18 @@ export default class character {
         xFolder.open()
         yFolder.open()
         zFolder.open()
+
+        const moveFolder = this.gui.addFolder('Move Character')
+        var move = { 
+            up:function(){
+                character.moveCharacterUpOrDown(1);
+            },
+            down:function(){
+                character.moveCharacterUpOrDown(-1);
+            }
+        };
+        moveFolder.add(move, 'up')
+        moveFolder.add(move, 'down')
     }
 
     closeMenu(scene) {
@@ -258,6 +285,7 @@ export default class character {
       circle.rotation.y = yR
       circle.rotation.z = zR
       circle.name = name
+      circle.frustumCulled=false
       scene.add( circle );
       return circle
     }

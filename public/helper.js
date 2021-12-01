@@ -14,5 +14,11 @@ export default class Helper {
             return vector;
     };
 
+    static getObjectDistanceFromCamera = function(target, camera) {
+        var cameraDistance = new THREE.Vector3();
+        cameraDistance.subVectors(camera.position, target);
+        return cameraDistance.length();
+    };
+
 }
  
