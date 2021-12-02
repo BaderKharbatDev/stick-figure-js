@@ -20,6 +20,7 @@ camera.position.setZ(200);
 camera.position.setY(200);
 
 window.addEventListener( 'resize', onWindowResize, false );
+
 function onWindowResize(){
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
@@ -56,6 +57,7 @@ function addPlane() {
 addPlane()
 
 //on object click
+var cc = document.getElementsByTagName("canvas");
 var raycaster = new THREE.Raycaster();
 var mouse = new THREE.Vector2();
 
@@ -125,13 +127,13 @@ function onDocumentMouseDown( event ) {
       console.log(error)
     }
 }
-window.addEventListener('mousedown', onDocumentMouseDown)
+cc[0].addEventListener('mousedown', onDocumentMouseDown)
 
 function onDocumentMouseUp( event ) {
   if(isDragging) isDragging = false;
   controls.enabled = true;
 }
-window.addEventListener('mouseup', onDocumentMouseUp)
+cc[0].addEventListener('mouseup', onDocumentMouseUp)
 
 var lastMove = 0;
 function onDocumentMouseMove( event ) {
@@ -193,7 +195,7 @@ function onDocumentMouseMove( event ) {
     lastMove = Date.now();
   } 
 }
-window.addEventListener('mousemove', onDocumentMouseMove)
+cc[0].addEventListener('mousemove', onDocumentMouseMove)
 
 //controls
 var controls = new OrbitControls(camera, renderer.domElement)
