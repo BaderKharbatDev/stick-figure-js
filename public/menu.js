@@ -1,3 +1,8 @@
+import Character from '/character.js';
+import Helper from './helper.js'
+import FrameManager from '/framemanager.js'
+
+var frameManager = FrameManager.getInstance()
 window['globalvars'] = {};
 window['globalvars'].isAnimating = false;
 
@@ -21,17 +26,16 @@ function toggleMenus() {
     toggleDiv('mainMenu')
     toggleDiv('newMenu')
 
-    // console.log(getStyle('newMenu'))
     if(getStyle('newMenu', 'display') == 'none') {
         window['globalvars'].isAnimating = false;
     } else {
         window['globalvars'].isAnimating = true;
     }
-    // console.log(window['globalvars'].isAnimating)
 }
 
 const newMenuButton = document.getElementById('new-menu-b')
 newMenuButton.onclick = toggleMenus;
 const menuButton = document.getElementById('back-b');
 menuButton.onclick = toggleMenus;
+
 

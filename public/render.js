@@ -4,6 +4,7 @@ import "/jsm/libs/stats.module.js";
 import Character from '/character.js';
 import Helper from './helper.js'
 import { GUI } from '/dat.gui.module.js';
+import FrameManager from '/framemanager.js'
 
 //init
 export const menuOffset = 200;
@@ -206,38 +207,28 @@ controls.target = character.torso.mesh.position
 controls.enablePan = false;
 controls.update
 
-//frame gui
-var gui = new GUI();
-gui.domElement.id = 'frame-gui';
-const folder = gui.addFolder('Frame Menu')
 var characterPos = [character.getPlayerJointPositions()]
-
-var playing = false;
-var frame_index = 0;
-
-var x = { 
-  SavePosition:function() {
-    characterPos.push(character.getPlayerJointPositions())
-  },
-  ShowPosition:function() {
-    // character.applyNewPlayerPosition(characterPos[characterPos.length-1])
-    if(selected_obj) selected_obj.material.color.setHex(old_color)
-    playing = true;
-  }
-};
-folder.add(x, 'SavePosition')
-folder.add(x, 'ShowPosition')
-folder.open();
+var frameManager = FrameManager.getInstance(character);
 
 function animate() {
   setTimeout( function() {
     requestAnimationFrame( animate );
   }, 1000 / 24 );
 
-  if(playing) {
-    character.applyNewPlayerPosition(characterPos[frame_index])
-    frame_index++;
-    if(frame_index == characterPos.length) frame_index = 0; //playing = false;
+  //code to check for animation
+  if(frameManager.playing) {
+    //check for any selected object 
+    if(selected_obj) {
+      selected_obj.material.color.setHex(old_color)
+      selected_obj = null;
+    }
+
+    character.applyNewPlayerPosition(frameManager.adjustedFrames[frame_index])
+    frameManager.frame_index++;
+    if(frameManager.frame_index == frameManager.adjustedFrames.length){
+      playing = false;
+      frame_index = 0;
+    }
   }
 
   controls.update();
