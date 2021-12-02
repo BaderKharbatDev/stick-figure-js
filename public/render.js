@@ -69,6 +69,8 @@ var partClickPos;
 var axis_name;
 
 function onDocumentMouseDown( event ) {
+    if(window['globalvars'].isAnimating == false) return
+
     try{
       event.preventDefault();
       mouse.x = ( (event.clientX-menuOffset)/ renderer.domElement.clientWidth ) * 2 - 1;
@@ -137,6 +139,7 @@ cc[0].addEventListener('mouseup', onDocumentMouseUp)
 
 var lastMove = 0;
 function onDocumentMouseMove( event ) {
+  if(window['globalvars'].isAnimating == false) return
   if(!isDragging) return
 
   mouse.x = ( (event.clientX-menuOffset)/ renderer.domElement.clientWidth ) * 2 - 1;

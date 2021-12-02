@@ -48,6 +48,16 @@ html {
   text-align: center;
 }
 
+#newMenu {
+  display: none;
+}
+
 .menu button{
   margin: 10px;
+}
+
+.back {
+  position: fixed;
+  top: 0;
+  left: 0;
 }

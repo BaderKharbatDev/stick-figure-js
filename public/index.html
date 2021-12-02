@@ -5,23 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title></title>
     <link rel="stylesheet" href="/style.css">  </head>
-    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css"> -->
-    <script>var exports = {};</script>
   <body>
     <div id="menu">
       <div class="menu" id='mainMenu'>
         <h3>Tricking Visualizer</h3>
-        <button class="button">New Movement</button>
+        <button id='new-menu-b'>New Movement</button>
         <button>Load Move Files</button>
         <button>Play Animation</button>
         <h3>List</h3>
         <input type="text" placeholder="Trick" minlength="4" maxlength="8" size="10">
       </div>
       <div class="menu" id='newMenu'>
-        
+        <button class="back" id="back-b">back</button>
+        <h3>Animator</h3>
+        <button>Play Animation</button>
+        <button>Next KeyFrame (N)</button>
+        <button>Save Animation to File</button>
       </div>
     </div>
     <canvas id='bg'></canvas>
     <script type="module" src="/render.js"></script>
+    <script type="module" src="/menu.js"></script>
   </body>
 </html>
