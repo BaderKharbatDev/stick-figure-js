@@ -1,7 +1,11 @@
+:root {
+  --menu_width: 200px;
+}
+
 canvas {
   position: fixed;
   top: 0;
-  left: 0;
+  left: var(--menu_width);
 
   margin: 0;
   padding: 0;
@@ -19,11 +23,23 @@ html {
   margin: 0;
   padding: 0;
 }
-#slider{
-  z-index: 2;
-  position: fixed;
-  top: 0;
-  left: 0;
+
+#frame-gui { 
+  position: absolute; 
+  top: 2px; 
+  left: var(--menu_width);
 }
 
-#frame-gui { position: absolute; top: 2px; left: 2px }
+#menu {
+  position: fixed;
+  width: var(--menu_width);
+  height: 100%;
+  background-color: white;
+  border: 1px solid black;
+
+  top: 0;
+  left: 0;
+  margin: 0;
+  padding: 0;
+  z-index: 1;
+}

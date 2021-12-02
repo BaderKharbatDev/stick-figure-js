@@ -6,20 +6,28 @@ import Helper from './helper.js'
 import { GUI } from '/dat.gui.module.js';
 
 //init
+export const menuOffset = 200;
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 5000);
+const camera = new THREE.PerspectiveCamera(75, (window.innerWidth-menuOffset) / window.innerHeight, 0.1, 5000);
 const renderer = new THREE.WebGLRenderer({
   antialias: true,
   canvas: document.querySelector('#bg'),
   alpha: true
 });
 renderer.setPixelRatio(window.devicePixelRatio);
-renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setSize(window.innerWidth-menuOffset, window.innerHeight);
 camera.position.setZ(200);
 camera.position.setY(200);
 
+window.addEventListener( 'resize', onWindowResize, false );
+function onWindowResize(){
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize( window.innerWidth, window.innerHeight );
+}
+
 //scene helpers
-const axesHelper = new THREE.AxesHelper( 200 );
+const axesHelper = new THREE.AxesHelper( 30 );
 scene.add( axesHelper );
 
 const light = new THREE.DirectionalLight( 0xffffff, 0.5, 100 );
@@ -59,10 +67,11 @@ var partClickPos;
 var axis_name;
 
 function onDocumentMouseDown( event ) {
-    // try{
+    try{
       event.preventDefault();
-      mouse.x = ( event.clientX / renderer.domElement.clientWidth ) * 2 - 1;
+      mouse.x = ( (event.clientX-menuOffset)/ renderer.domElement.clientWidth ) * 2 - 1;
       mouse.y = - ( event.clientY / renderer.domElement.clientHeight ) * 2 + 1;
+
       raycaster.setFromCamera( mouse, camera );
       var intersectsAxisMenu = raycaster.intersectObjects( character.circleMenu );
       var intersects = raycaster.intersectObjects( character.group.children ); 
@@ -89,9 +98,10 @@ function onDocumentMouseDown( event ) {
           x: event.offsetX,
           y: event.offsetY
         };
+
         partClickPos = Helper.toScreenPosition(new THREE.Vector3(selected_obj.position.x, selected_obj.position.y, selected_obj.position.z), camera)
       } else if ( intersects.length > 0 ) {
-          // try {
+          try {
             if(selected_obj != null) {
               selected_obj.material.color.setHex(old_color)
               character.closeMenu();
@@ -107,13 +117,13 @@ function onDocumentMouseDown( event ) {
               selected_obj.material.color.setHex(0x000000);
               character.openMenu(selected_obj);
             }
-          // } catch (error) {
-            // console.log(error)
-          // }
+          } catch (error) {
+            console.log(error)
+          }
       }
-    // } catch(error) {
-    //   console.log(error)
-    // }
+    } catch(error) {
+      console.log(error)
+    }
 }
 window.addEventListener('mousedown', onDocumentMouseDown)
 
@@ -126,6 +136,9 @@ window.addEventListener('mouseup', onDocumentMouseUp)
 var lastMove = 0;
 function onDocumentMouseMove( event ) {
   if(!isDragging) return
+
+  mouse.x = ( (event.clientX-menuOffset)/ renderer.domElement.clientWidth ) * 2 - 1;
+  mouse.y = - ( event.clientY / renderer.domElement.clientHeight ) * 2 + 1;
 
   if(Date.now() - lastMove > 50) {
       //move arm
@@ -141,6 +154,7 @@ function onDocumentMouseMove( event ) {
   
       var cosAB = old_dir.dot( new_dir );
       var angle_in_radians = Math.acos( cosAB );
+      // console.log(THREE.Math.radToDeg(angle_in_radians))
       var direction = (( old_dir.cross( new_dir ) < 0) ? 1 : -1);
 
       var part;
@@ -191,24 +205,35 @@ controls.update
 var gui = new GUI();
 gui.domElement.id = 'frame-gui';
 const folder = gui.addFolder('Frame Menu')
-var characterPos = character.getPlayerJointPositions()
+var characterPos = [character.getPlayerJointPositions()]
+
+var playing = false;
+var frame_index = 0;
+
 var x = { 
   SavePosition:function() {
-    characterPos = character.getPlayerJointPositions()
+    characterPos.push(character.getPlayerJointPositions())
   },
   ShowPosition:function() {
-    // console.log(characterPos)
-    character.applyNewPlayerPosition(characterPos)
+    // character.applyNewPlayerPosition(characterPos[characterPos.length-1])
     if(selected_obj) selected_obj.material.color.setHex(old_color)
+    playing = true;
   }
 };
 folder.add(x, 'SavePosition')
 folder.add(x, 'ShowPosition')
 folder.open();
 
-
 function animate() {
-  requestAnimationFrame(animate);
+  setTimeout( function() {
+    requestAnimationFrame( animate );
+  }, 1000 / 24 );
+
+  if(playing) {
+    character.applyNewPlayerPosition(characterPos[frame_index])
+    frame_index++;
+    if(frame_index == characterPos.length) frame_index = 0; //playing = false;
+  }
 
   controls.update();
   renderer.render(scene, camera);
