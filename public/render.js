@@ -48,7 +48,7 @@ character.addToScene(scene);
 function addPlane() {
   let length = 5000;
   let width = 10000;
-  var front = new THREE.Mesh(new THREE.BoxGeometry(width, 10, length), new THREE.MeshStandardMaterial({ color: 0xCCCCFF }))
+  var front = new THREE.Mesh(new THREE.BoxGeometry(width, 10, length), new THREE.MeshStandardMaterial({ color: 0x0096FF }))
   front.position.set(0, -5, length / 2)
   var back = new THREE.Mesh(new THREE.BoxGeometry(width, 10, length), new THREE.MeshStandardMaterial({ color: 0xCCCCFF }))
   back.position.set(0, -5, -1 * length / 2)
@@ -204,7 +204,7 @@ cc[0].addEventListener('mousemove', onDocumentMouseMove)
 
 //controls
 var controls = new OrbitControls(camera, renderer.domElement)
-controls.target = character.torso.mesh.position
+controls.target = new THREE.Vector3(0, 75, 0)
 controls.enablePan = false;
 controls.update
 
@@ -215,9 +215,10 @@ var playManager = PlayerManager.getInstance(character);
 function animate() {
   setTimeout( function() {
     requestAnimationFrame( animate );
-  }, 1000 / 24 );
+  }, 1000 / 24 / playManager.speed );
 
     if(playManager.playing) {
+
         //check for any selected object 
         if(selected_obj) {
           selected_obj.material.color.setHex(old_color)

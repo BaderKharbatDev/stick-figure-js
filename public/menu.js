@@ -85,7 +85,6 @@ document.getElementById('inputfile').onchange = function(evt) {
             let reader = new FileReader();
             const self = this;
             reader.onload = (event) => {
-                // console.log('FILE CONTENT', JSON.parse(event.target.result));
                 playerManager.addAnimation(JSON.parse(event.target.result))
             };
             reader.readAsText(file);
@@ -95,3 +94,10 @@ document.getElementById('inputfile').onchange = function(evt) {
         console.error(err);
     }
 }
+
+var slider = document.getElementById("play_speed");
+var slider_text = document.getElementById('speed-text')
+slider.oninput = function() {
+    slider_text.innerHTML = 'x'+this.value/100;
+    playerManager.speed = this.value/100 
+} 

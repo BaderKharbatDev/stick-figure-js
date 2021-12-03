@@ -11,6 +11,7 @@ canvas {
   padding: 0;
   z-index: 0;
 
+  /* transform: scaleX(-1); */
 }
 
 body {
@@ -109,3 +110,4 @@ html {
 .custom-file-input:active::before {
   background: -webkit-linear-gradient(top, #e3e3e3, #f9f9f9);
 }
+

@@ -3,6 +3,7 @@ export default class PlayerManager {
         this.frames = [];
         this.playing = false;
         this.frame_index = 0;
+        this.speed = 1.0
         PlayerManager.instance=this;
     }
 
