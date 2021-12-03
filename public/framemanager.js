@@ -64,6 +64,11 @@ export default class FrameManager {
         this.saveCurrentKeyFrame()
         this.currentFrameBeingEdited = index
         this.buttons[this.currentFrameBeingEdited].style.background = current_key_frame_color;
+        // console.log(this.currentFrameBeingEdited)
+        // this.character.applyNewPlayerPosition()
+        if(this.frames[this.currentFrameBeingEdited] != null) {
+            this.character.applyNewPlayerPosition(this.frames[this.currentFrameBeingEdited])
+        }
     }
 
     play() {
@@ -100,7 +105,9 @@ export default class FrameManager {
 
     //TO-DO
     static generatePositionBetweenTwoFrames(frame1, frame2) {
-
+        var inbetweenFrames = []
+        //maybe use like 5 frames for transitions? or make it depending on distance?
+        
     }
 
 
