@@ -4,21 +4,29 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title></title>
-    <link rel="stylesheet" href="/style.css">  </head>
+    <link rel="stylesheet" href="/style.css"> 
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"/>
+  </head>
+    
   <body>
     <div id="menu">
       <div class="menu" id='mainMenu'>
-        <h3>Tricking Visualizer</h3>
+        <h3 style="margin-top: 50px;">Tricking Visualizer</h3>
         <button id='new-menu-b'>New Movement</button>
-        <button>Load Move Files</button>
-        <button>Play Animation</button>
-        <h3>List</h3>
+        
+        <label class="btn btn-primary" style="padding: 3px; margin: 0px; margin-top: 20px;">
+          <i class="fa" style="padding: 0px; margin: 0px;"></i> Load Move Files<input type="file" style="display: none; padding: 0px; margin: 0px;" name="image" id='inputfile'>
+        </label>
+
+        <button id="play_a_b">Play Animation</button>
+        <h3 style="margin-top: 20px;">List</h3>
         <input type="text" placeholder="Trick" minlength="4" maxlength="8" size="10">
       </div>
       <div class="menu" id='newMenu'>
         <button class="back" id="back-b">back</button>
-        <h3>Animator</h3>
-        <h4> *Note: Do Not Resize the Window or Things Mess Up (im fixing it)</h4>
+        <h3 style="margin-top: 50px;">Animator</h3>
+        <h5> *Note: Do Not Resize the Window or Things Mess Up (im fixing it)</h5>
         <button id="play_b">Play Animation (P)</button>
         <button id="next_b">Next KeyFrame (N)</button>
         <button id="save_b">Save Animation to File</button>

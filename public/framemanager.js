@@ -68,13 +68,12 @@ export default class FrameManager {
 
     play() {
         //turn frames into adjusted frames 1st by judging the best positions
-
         this.playing = true;
     }
 
     saveAnimation() {
-        //turns frames into adjusted frames again and saves it to a json file
-        this.#downloadObjectAsJson(this.frames, 'animation')
+        this.adjustFrames()
+        this.#downloadObjectAsJson(this.adjustedFrames, 'animation')
     }
 
     #downloadObjectAsJson(exportObj, exportName){
@@ -86,6 +85,18 @@ export default class FrameManager {
         downloadAnchorNode.click();
         downloadAnchorNode.remove();
       }
+
+    adjustFrames() {
+        this.adjustedFrames = [];
+        //turns frames into adjusted frames again and saves it to a json file
+        for(var i = 0; i < this.frames.length; i++) {
+            if(this.frames[i] != null) {
+                this.adjustedFrames.push(this.frames[i])
+            } else {
+                break
+            }
+        }
+    }
 
     //TO-DO
     static generatePositionBetweenTwoFrames(frame1, frame2) {

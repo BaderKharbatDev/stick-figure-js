@@ -5,6 +5,7 @@ import Character from '/character.js';
 import Helper from './helper.js'
 import { GUI } from '/dat.gui.module.js';
 import FrameManager from '/framemanager.js'
+import PlayerManager from '/playermanager.js'
 
 //init
 export const menuOffset = 200;
@@ -47,9 +48,9 @@ character.addToScene(scene);
 function addPlane() {
   let length = 5000;
   let width = 10000;
-  var front = new THREE.Mesh(new THREE.BoxGeometry(width, 10, length), new THREE.MeshStandardMaterial({ color: 0xbbbbbb }))
+  var front = new THREE.Mesh(new THREE.BoxGeometry(width, 10, length), new THREE.MeshStandardMaterial({ color: 0xCCCCFF }))
   front.position.set(0, -5, length / 2)
-  var back = new THREE.Mesh(new THREE.BoxGeometry(width, 10, length), new THREE.MeshStandardMaterial({ color: 0xE2E5DE }))
+  var back = new THREE.Mesh(new THREE.BoxGeometry(width, 10, length), new THREE.MeshStandardMaterial({ color: 0xCCCCFF }))
   back.position.set(0, -5, -1 * length / 2)
   front.receiveShadow = true;
   back.receiveShadow = true;
@@ -209,35 +210,50 @@ controls.update
 
 var characterPos = [character.getPlayerJointPositions()]
 var frameManager = FrameManager.getInstance(character);
+var playManager = PlayerManager.getInstance(character);
 
 function animate() {
   setTimeout( function() {
     requestAnimationFrame( animate );
   }, 1000 / 24 );
 
-  //code to check for animation
-  if(frameManager.playing) {
-    console.log('*')
-    //check for any selected object 
-    if(selected_obj) {
-      selected_obj.material.color.setHex(old_color)
-      selected_obj = null;
-    }
+    if(playManager.playing) {
+        //check for any selected object 
+        if(selected_obj) {
+          selected_obj.material.color.setHex(old_color)
+          selected_obj = null;
+        }
 
-    // character.applyNewPlayerPosition(frameManager.adjustedFrames[frame_index])
-    if(frameManager.frames[frameManager.frame_index] != null) {
-      character.applyNewPlayerPosition(frameManager.frames[frameManager.frame_index])
-      frameManager.frame_index++;
-      if(frameManager.frame_index == frameManager.frames.length){
-        frameManager.playing = false;
-        frameManager.frame_index = 0;
+        if(playManager.frames[playManager.frame_index] != null) {
+          character.applyNewPlayerPosition(playManager.frames[playManager.frame_index])
+          playManager.frame_index++;
+          if(playManager.frame_index == playManager.frames.length){
+            playManager.playing = false;
+            playManager.frame_index = 0;
+          }
+        } else {
+          playManager.playing = false;
+          playManager.frame_index = 0;
+        }
+    } else if(frameManager.playing) {
+        //check for any selected object 
+        if(selected_obj) {
+          selected_obj.material.color.setHex(old_color)
+          selected_obj = null;
+        }
+
+        if(frameManager.frames[frameManager.frame_index] != null) {
+          character.applyNewPlayerPosition(frameManager.frames[frameManager.frame_index])
+          frameManager.frame_index++;
+          if(frameManager.frame_index == frameManager.frames.length){
+            frameManager.playing = false;
+            frameManager.frame_index = 0;
+          }
+        } else {
+          frameManager.playing = false;
+          frameManager.frame_index = 0;
+        }
       }
-    } else {
-      frameManager.playing = false;
-      frameManager.frame_index = 0;
-    }
-    
-  }
 
   controls.update();
   renderer.render(scene, camera);

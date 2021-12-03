@@ -1,8 +1,10 @@
 import Character from '/character.js';
 import Helper from './helper.js'
 import FrameManager from '/framemanager.js'
+import PlayerManager from '/playermanager.js'
 
 var frameManager = FrameManager.getInstance()
+var playerManager = PlayerManager.getInstance()
 window['globalvars'] = {};
 window['globalvars'].isAnimating = false;
 
@@ -29,6 +31,7 @@ function toggleMenus() {
 
     if(getStyle('newMenu', 'display') == 'none') {
         window['globalvars'].isAnimating = false;
+        frameManager.character.closeMenu()
     } else {
         window['globalvars'].isAnimating = true;
     }
@@ -65,4 +68,30 @@ document.getElementById('next_b').onclick = function() {
 
 document.getElementById('save_b').onclick = function() {
     frameManager.saveAnimation()
+}
+
+document.getElementById('play_a_b').onclick = function() {
+    playerManager.play()
+}
+
+document.getElementById('inputfile').onchange = function(evt) {
+    try {
+        let files = evt.target.files;
+        if (!files.length) {
+            alert('No file selected!');
+            return;
+        }
+        for (var file of files) {
+            let reader = new FileReader();
+            const self = this;
+            reader.onload = (event) => {
+                // console.log('FILE CONTENT', JSON.parse(event.target.result));
+                playerManager.addAnimation(JSON.parse(event.target.result))
+            };
+            reader.readAsText(file);
+        }
+        
+    } catch (err) {
+        console.error(err);
+    }
 }
