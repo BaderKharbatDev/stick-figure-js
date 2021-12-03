@@ -217,18 +217,26 @@ function animate() {
 
   //code to check for animation
   if(frameManager.playing) {
+    console.log('*')
     //check for any selected object 
     if(selected_obj) {
       selected_obj.material.color.setHex(old_color)
       selected_obj = null;
     }
 
-    character.applyNewPlayerPosition(frameManager.adjustedFrames[frame_index])
-    frameManager.frame_index++;
-    if(frameManager.frame_index == frameManager.adjustedFrames.length){
-      playing = false;
-      frame_index = 0;
+    // character.applyNewPlayerPosition(frameManager.adjustedFrames[frame_index])
+    if(frameManager.frames[frameManager.frame_index] != null) {
+      character.applyNewPlayerPosition(frameManager.frames[frameManager.frame_index])
+      frameManager.frame_index++;
+      if(frameManager.frame_index == frameManager.frames.length){
+        frameManager.playing = false;
+        frameManager.frame_index = 0;
+      }
+    } else {
+      frameManager.playing = false;
+      frameManager.frame_index = 0;
     }
+    
   }
 
   controls.update();

@@ -44,7 +44,7 @@ export default class FrameManager {
         this.buttons.push(b)
         //
         this.adjustedFrames = [];
-        this.saveCurrentKeyFrame();
+        this.moveToDifferentKeyFrame(0);
         FrameManager.instance=this;
     }
 
@@ -74,6 +74,22 @@ export default class FrameManager {
 
     saveAnimation() {
         //turns frames into adjusted frames again and saves it to a json file
+        this.#downloadObjectAsJson(this.frames, 'animation')
+    }
+
+    #downloadObjectAsJson(exportObj, exportName){
+        var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportObj));
+        var downloadAnchorNode = document.createElement('a');
+        downloadAnchorNode.setAttribute("href",     dataStr);
+        downloadAnchorNode.setAttribute("download", exportName + ".json");
+        document.body.appendChild(downloadAnchorNode); // required for firefox
+        downloadAnchorNode.click();
+        downloadAnchorNode.remove();
+      }
+
+    //TO-DO
+    static generatePositionBetweenTwoFrames(frame1, frame2) {
+
     }
 
 

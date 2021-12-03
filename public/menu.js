@@ -42,4 +42,27 @@ newMenuButton.onclick = toggleMenus;
 const menuButton = document.getElementById('back-b');
 menuButton.onclick = toggleMenus;
 
+document.addEventListener('keydown', function(event){
+    if(event.keyCode == 78) {
+        if(frameManager.currentFrameBeingEdited != frameManager.frames.length - 1) {
+            frameManager.moveToDifferentKeyFrame(frameManager.currentFrameBeingEdited + 1)
+        }
+    }
+    if(event.keyCode == 80) {
+        frameManager.play()
+    }
+} );
 
+document.getElementById('play_b').onclick = function() {
+    frameManager.play()
+}
+
+document.getElementById('next_b').onclick = function() {
+    if(frameManager.currentFrameBeingEdited != frameManager.frames.length - 1) {
+        frameManager.moveToDifferentKeyFrame(frameManager.currentFrameBeingEdited + 1)
+    }
+}
+
+document.getElementById('save_b').onclick = function() {
+    frameManager.saveAnimation()
+}
