@@ -1,3 +1,7 @@
+const frame_div = document.getElementById('frame-bar')
+const current_key_frame_color = '#FFFF00';
+const saved_key_frame_color = '#808080';
+const unsaved_key_frame_color = '#ffffff';
 
 class Frame {
     constructor(character_positions) {
@@ -12,16 +16,35 @@ export default class FrameManager {
         this.currentFrameBeingEdited = 0;
         this.playing = false;
         this.frames = [];
-
+        this.buttons = [];
+        //
         let frame_max_seconds = 10
         let frame_rate = 24
+        let b;
+        let this_class = this
         for(var s = 0; s < frame_max_seconds; s++) {
             for(var f = 0; f < frame_rate; f++) {
                 this.frames.push(null)
+                b = document.createElement('button');
+                if(f == 0) {
+                    b.innerHTML = s + 's'
+                }
+                let ind = this_class.frames.length - 1
+                b.onclick = function() {
+                    this_class.moveToDifferentKeyFrame(ind)
+                }
+                frame_div.appendChild(b)
+                this.buttons.push(b)
             }
         }
-        this.frames[0] = character.getPlayerJointPositions()
-        this.adjustedFrames = [character.getPlayerJointPositions()]
+        this.frames.push(null)
+        b = document.createElement('button');
+        b.innerHTML = '10s'
+        frame_div.appendChild(b)
+        this.buttons.push(b)
+        //
+        this.adjustedFrames = [];
+        this.saveCurrentKeyFrame();
         FrameManager.instance=this;
     }
 
@@ -33,12 +56,14 @@ export default class FrameManager {
     }
 
     saveCurrentKeyFrame() {
-        this.frames[this.frame_index] = this.character.getPlayerJointPositions()
+        this.frames[this.currentFrameBeingEdited] = this.character.getPlayerJointPositions()
     }
 
     moveToDifferentKeyFrame(index) {
+        this.buttons[this.currentFrameBeingEdited].style.background = saved_key_frame_color;
         this.saveCurrentKeyFrame()
-        this.frame_index = index
+        this.currentFrameBeingEdited = index
+        this.buttons[this.currentFrameBeingEdited].style.background = current_key_frame_color;
     }
 
     play() {

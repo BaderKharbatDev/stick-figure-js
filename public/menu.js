@@ -25,11 +25,15 @@ function toggleDiv(id) {
 function toggleMenus() {
     toggleDiv('mainMenu')
     toggleDiv('newMenu')
+    toggleDiv('frame-bar')
 
     if(getStyle('newMenu', 'display') == 'none') {
         window['globalvars'].isAnimating = false;
     } else {
         window['globalvars'].isAnimating = true;
+    }
+    if(getStyle('frame-bar', 'display') == 'block') {
+        document.getElementById('frame-bar').style.display = 'flex'
     }
 }
 

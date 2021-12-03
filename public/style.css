@@ -61,3 +61,26 @@ html {
   top: 0;
   left: 0;
 }
+
+#frame-bar {
+  position: fixed;
+  bottom: 0;
+  left: var(--menu_width);
+  width: calc(100% - 200px);
+  height: 100px;
+  background: rgba(255, 0, 0, 0.5);
+  z-index: 1;
+
+  display: none;
+  flex-direction: row;
+  align-items: center;
+  overflow: auto;
+}
+
+#frame-bar button {
+  height: 30px;
+  margin: 20px;
+  padding: 5px;
+  
+  text-align: center;
+}
