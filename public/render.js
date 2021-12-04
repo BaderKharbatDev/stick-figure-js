@@ -34,7 +34,7 @@ const axesHelper = new THREE.AxesHelper( 30 );
 scene.add( axesHelper );
 
 const light = new THREE.DirectionalLight( 0xffffff, 0.5, 100 );
-const light2 = new THREE.AmbientLight( 0xffffff, 0.5, 100 );
+const light2 = new THREE.AmbientLight( 0xffffff, 0.4, 100 );
 light.position.y = 200
 light.position.z = 300
 light.castShadow = true;
@@ -48,7 +48,7 @@ character.addToScene(scene);
 function addPlane() {
   let length = 5000;
   let width = 10000;
-  var front = new THREE.Mesh(new THREE.BoxGeometry(width, 10, length), new THREE.MeshStandardMaterial({ color: 0x0096FF }))
+  var front = new THREE.Mesh(new THREE.BoxGeometry(width, 10, length), new THREE.MeshStandardMaterial({ color: 0xCCCCFF }))
   front.position.set(0, -5, length / 2)
   var back = new THREE.Mesh(new THREE.BoxGeometry(width, 10, length), new THREE.MeshStandardMaterial({ color: 0xCCCCFF }))
   back.position.set(0, -5, -1 * length / 2)
@@ -215,7 +215,7 @@ var playManager = PlayerManager.getInstance(character);
 function animate() {
   setTimeout( function() {
     requestAnimationFrame( animate );
-  }, 1000 / 24 / playManager.speed );
+  }, 1000 / 45 / playManager.speed );
 
     if(playManager.playing) {
 

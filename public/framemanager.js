@@ -64,14 +64,23 @@ export default class FrameManager {
         this.saveCurrentKeyFrame()
         this.currentFrameBeingEdited = index
         this.buttons[this.currentFrameBeingEdited].style.background = current_key_frame_color;
-        // console.log(this.currentFrameBeingEdited)
-        // this.character.applyNewPlayerPosition()
         if(this.frames[this.currentFrameBeingEdited] != null) {
             this.character.applyNewPlayerPosition(this.frames[this.currentFrameBeingEdited])
         }
     }
 
     play() {
+        this.saveCurrentKeyFrame()
+        var last_ind = 0;
+        for(var i = 0; i < this.frames.length; i++) {
+            if(this.frames[i] == null) {
+                break;
+            } else {
+                last_ind = i;
+            }
+        }
+        this.moveToDifferentKeyFrame(last_ind)
+
         //turn frames into adjusted frames 1st by judging the best positions
         this.playing = true;
     }
