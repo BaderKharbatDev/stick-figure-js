@@ -74,6 +74,10 @@ document.getElementById('play_a_b').onclick = function() {
     playerManager.play()
 }
 
+document.getElementById('remove_b').onclick = function() {
+    frameManager.removeCurrentFrame()
+}
+
 document.getElementById('inputfile').onchange = function(evt) {
     try {
         let files = evt.target.files;

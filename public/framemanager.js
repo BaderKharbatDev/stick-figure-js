@@ -115,9 +115,26 @@ export default class FrameManager {
             if(this.frames[i] != null) {
                 this.adjustedFrames.push(this.frames[i])
             } else {
-                break
+                // break
             }
         }
+    }
+
+    removeCurrentFrame() {
+        if(this.currentFrameBeingEdited != 0) {
+            this.frames[this.currentFrameBeingEdited] = null
+            this.buttons[this.currentFrameBeingEdited].style.background = unsaved_key_frame_color;
+
+            var last_char_pos = this.currentFrameBeingEdited
+            while( this.frames[last_char_pos] == null) {
+                last_char_pos -= 1;
+            }
+
+            this.character.applyNewPlayerPosition(this.frames[last_char_pos])
+            this.currentFrameBeingEdited = last_char_pos
+            this.buttons[this.currentFrameBeingEdited].style.background = current_key_frame_color;
+        }
+        
     }
 
     //TO-DO

@@ -359,7 +359,7 @@ export default class character {
     }
 
     applyNewPlayerPosition(newPositions) {
-        // this.closeMenu()
+        this.closeMenu()
         this.changePartPos(this.left_foot.mesh, newPositions['left_foot'])
         this.changePartPos(this.right_foot.mesh, newPositions['right_foot'])
         this.changePartPos(this.left_knee.mesh, newPositions['left_knee'])
