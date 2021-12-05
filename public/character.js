@@ -21,11 +21,11 @@ export default class character {
     circleMenu = [];
 
     constructor() {
-        let radius = 3;
-        let arm_d = 20;
-        let leg_d = 25;
-        let tor_w = 30;
-        let tor_h = 50;
+        var radius = 3;
+        var arm_d = 20;
+        var leg_d = 25;
+        var tor_w = 30;
+        var tor_h = 50;
 
         this.right_hand = new part( newSphere(radius, 0x0000FF), []);
         this.left_hand = new part( new newSphere(radius, 0xFFFF00), []);
@@ -83,6 +83,7 @@ export default class character {
         pos2 = new THREE.Vector3(parseFloat(pos2.x), parseFloat(pos2.y), parseFloat(pos2.z) )
 
         let geometry = new THREE.BufferGeometry().setFromPoints( [pos1, pos2] );
+        // geometry.computeBoundingSphere()
 
         let material = new THREE.LineBasicMaterial( { color: 0x000000 } );
         let line = new THREE.Line(geometry, material);
@@ -291,6 +292,7 @@ export default class character {
 
     static createCircle(scene, size, color, xR, yR, zR, x, y, z, name) {
       const geometry = new THREE.CircleGeometry( size, 100 );
+      geometry.computeBoundingSphere()
       const material = new THREE.MeshBasicMaterial( { color: color, side: THREE.DoubleSide, transparent: true, opacity: 0.7} );
       const circle = new THREE.Mesh( geometry, material );
       circle.position.set(x, y, z)
@@ -357,7 +359,7 @@ export default class character {
     }
 
     applyNewPlayerPosition(newPositions) {
-        this.closeMenu()
+        // this.closeMenu()
         this.changePartPos(this.left_foot.mesh, newPositions['left_foot'])
         this.changePartPos(this.right_foot.mesh, newPositions['right_foot'])
         this.changePartPos(this.left_knee.mesh, newPositions['left_knee'])

@@ -19,7 +19,7 @@ export default class FrameManager {
         this.buttons = [];
         //
         let frame_max_seconds = 10
-        let frame_rate = 24
+        let frame_rate = 30
         let b;
         let this_class = this
         for(var s = 0; s < frame_max_seconds; s++) {
@@ -66,6 +66,14 @@ export default class FrameManager {
         this.buttons[this.currentFrameBeingEdited].style.background = current_key_frame_color;
         if(this.frames[this.currentFrameBeingEdited] != null) {
             this.character.applyNewPlayerPosition(this.frames[this.currentFrameBeingEdited])
+        } else {
+            //make character position the last available non-null frame
+
+            var last_char_pos = this.currentFrameBeingEdited
+            while( this.frames[last_char_pos] == null) {
+                last_char_pos -= 1;
+            }
+            this.character.applyNewPlayerPosition(this.frames[last_char_pos])
         }
     }
 

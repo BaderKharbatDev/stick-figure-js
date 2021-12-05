@@ -18,7 +18,6 @@ export default class PlayerManager {
         for(var i = 0; i < frames.length; i++) {
             this.frames.push(frames[i])
         }
-        console.log(this.frames.length)
     }
 
     play() {

@@ -24,9 +24,9 @@ camera.position.setY(200);
 window.addEventListener( 'resize', onWindowResize, false );
 
 function onWindowResize(){
-    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.aspect = (window.innerWidth-menuOffset) / window.innerHeight;
     camera.updateProjectionMatrix();
-    renderer.setSize( window.innerWidth, window.innerHeight );
+    renderer.setSize( (window.innerWidth-menuOffset), window.innerHeight );
 }
 
 //scene helpers
@@ -70,6 +70,7 @@ var lastClickPos;
 var partClickPos;
 var axis_name;
 
+//frame clicker needs to be moved
 function onDocumentMouseDown( event ) {
     if(window['globalvars'].isAnimating == false) return
 
@@ -78,23 +79,46 @@ function onDocumentMouseDown( event ) {
       mouse.x = ( (event.clientX-menuOffset)/ renderer.domElement.clientWidth ) * 2 - 1;
       mouse.y = - ( event.clientY / renderer.domElement.clientHeight ) * 2 + 1;
 
+      //gets raycasts of both the circle menu and the character
       raycaster.setFromCamera( mouse, camera );
       var intersectsAxisMenu = raycaster.intersectObjects( character.circleMenu );
       var intersects = raycaster.intersectObjects( character.group.children ); 
 
-      var isDuplicate = false;
-      var isCircle = false;
-      if(intersectsAxisMenu.length > 0 && intersects.length > 0) {
-        isDuplicate = true;
-        var firstIntersect = raycaster.intersectObjects( scene.children )[0].object;
-        for(var i = 0; i < character.circleMenu.length; i++) {
-          if(character.circleMenu[i] == firstIntersect) {
-            isCircle = true;
-          }
-        }
-      }
+      //checks if circle menu is being clicked and not the character's joints
+      // var isDuplicate = false;
+      // var isCircle = false;
+      // if(intersectsAxisMenu.length > 0 && intersects.length > 0) {
+      //   isDuplicate = true;
+      //   var firstIntersect = raycaster.intersectObjects( scene.children )[0].object;
+      //   for(var i = 0; i < character.circleMenu.length; i++) {
+      //     if(character.circleMenu[i] == firstIntersect) {
+      //       isCircle = true;
+      //     }
+      //   }
+      // }
 
-      if((character.circleMenu.length > 0 && intersectsAxisMenu.length > 0) && !(isCircle ^ isDuplicate)) {
+      //&& !(isCircle ^ isDuplicate)
+      if ( intersects.length > 0 ) {
+        try {
+          if(selected_obj != null) {
+            selected_obj.material.color.setHex(old_color)
+            character.closeMenu();
+          }
+          if(intersects[0].object == selected_obj) {
+            selected_obj.material.color.setHex(old_color)
+            selected_obj = null;
+            old_color = null;
+            character.closeMenu();
+          } else {
+            selected_obj = intersects[0].object;
+            old_color = JSON.parse(JSON.stringify(selected_obj.material.color));
+            selected_obj.material.color.setHex(0x000000);
+            character.openMenu(selected_obj);
+          }
+        } catch (error) {
+          console.log(error)
+        }
+    } else if((character.circleMenu.length > 0 && intersectsAxisMenu.length > 0) ) {
         controls.enabled = false;
         isDragging = true;
 
@@ -106,26 +130,6 @@ function onDocumentMouseDown( event ) {
         };
 
         partClickPos = Helper.toScreenPosition(new THREE.Vector3(selected_obj.position.x, selected_obj.position.y, selected_obj.position.z), camera)
-      } else if ( intersects.length > 0 ) {
-          try {
-            if(selected_obj != null) {
-              selected_obj.material.color.setHex(old_color)
-              character.closeMenu();
-            }
-            if(intersects[0].object == selected_obj) {
-              selected_obj.material.color.setHex(old_color)
-              selected_obj = null;
-              old_color = null;
-              character.closeMenu();
-            } else {
-              selected_obj = intersects[0].object;
-              old_color = JSON.parse(JSON.stringify(selected_obj.material.color));
-              selected_obj.material.color.setHex(0x000000);
-              character.openMenu(selected_obj);
-            }
-          } catch (error) {
-            console.log(error)
-          }
       }
     } catch(error) {
       console.log(error)
@@ -215,15 +219,16 @@ var playManager = PlayerManager.getInstance(character);
 function animate() {
   setTimeout( function() {
     requestAnimationFrame( animate );
-  }, 1000 / 45 / playManager.speed );
+  }, 1000 / 30 / playManager.speed );
 
     if(playManager.playing) {
 
-        //check for any selected object 
-        if(selected_obj) {
-          selected_obj.material.color.setHex(old_color)
-          selected_obj = null;
-        }
+        //REFACTOR THIS
+        // check for any selected object 
+        // if(selected_obj) {
+        //   selected_obj.material.color.setHex(old_color)
+        //   selected_obj = null;
+        // }
 
         if(playManager.frames[playManager.frame_index] != null) {
           character.applyNewPlayerPosition(playManager.frames[playManager.frame_index])
@@ -237,11 +242,13 @@ function animate() {
           playManager.frame_index = 0;
         }
     } else if(frameManager.playing) {
-        //check for any selected object 
-        if(selected_obj) {
-          selected_obj.material.color.setHex(old_color)
-          selected_obj = null;
-        }
+
+        //REFACTOR THIS
+        // check for any selected object 
+        // if(selected_obj) {
+        //   selected_obj.material.color.setHex(old_color)
+        //   selected_obj = null;
+        // }
 
         if(frameManager.frames[frameManager.frame_index] != null) {
           character.applyNewPlayerPosition(frameManager.frames[frameManager.frame_index])
