@@ -60,6 +60,7 @@ export default class FrameManager {
     }
 
     moveToDifferentKeyFrame(index) {
+
         this.buttons[this.currentFrameBeingEdited].style.background = saved_key_frame_color;
         this.saveCurrentKeyFrame()
         this.currentFrameBeingEdited = index
@@ -135,6 +136,55 @@ export default class FrameManager {
             this.buttons[this.currentFrameBeingEdited].style.background = current_key_frame_color;
         }
         
+    }
+
+    loadAnimation(frames) {
+        console.log('*')
+
+        this.frame_index = 0;
+        this.currentFrameBeingEdited = 0;
+        this.playing = false;
+        this.frames = [];
+        this.buttons = [];
+        frame_div.innerHTML = '';
+
+        let frame_max_seconds = 10
+        let frame_rate = 30
+        let b;
+        let this_class = this
+        for(var s = 0; s < frame_max_seconds; s++) {
+            for(var f = 0; f < frame_rate; f++) {
+                this.frames.push(null)
+                b = document.createElement('button');
+                if(f == 0) {
+                    b.innerHTML = s + 's'
+                }
+                let ind = this_class.frames.length - 1
+                b.onclick = function() {
+                    this_class.moveToDifferentKeyFrame(ind)
+                }
+                frame_div.appendChild(b)
+                this.buttons.push(b)
+            }
+        }
+        this.frames.push(null)
+        b = document.createElement('button');
+        b.innerHTML = '10s'
+        frame_div.appendChild(b)
+        this.buttons.push(b)
+        //
+        this.adjustedFrames = [];
+
+        for(var i = 0; i < frames.length; i++) {
+            if(frames[i] != null) {
+                this.frames[i] = frames[i]
+                this.buttons[i].style.background = saved_key_frame_color;
+            }
+        }
+
+        this.character.applyNewPlayerPosition(this.frames[0])
+        this.buttons[0].style.background = current_key_frame_color;
+
     }
 
     //TO-DO

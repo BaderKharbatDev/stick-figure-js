@@ -84,20 +84,6 @@ function onDocumentMouseDown( event ) {
       var intersectsAxisMenu = raycaster.intersectObjects( character.circleMenu );
       var intersects = raycaster.intersectObjects( character.group.children ); 
 
-      //checks if circle menu is being clicked and not the character's joints
-      // var isDuplicate = false;
-      // var isCircle = false;
-      // if(intersectsAxisMenu.length > 0 && intersects.length > 0) {
-      //   isDuplicate = true;
-      //   var firstIntersect = raycaster.intersectObjects( scene.children )[0].object;
-      //   for(var i = 0; i < character.circleMenu.length; i++) {
-      //     if(character.circleMenu[i] == firstIntersect) {
-      //       isCircle = true;
-      //     }
-      //   }
-      // }
-
-      //&& !(isCircle ^ isDuplicate)
       if ( intersects.length > 0 ) {
         try {
           if(selected_obj != null) {
@@ -179,21 +165,23 @@ function onDocumentMouseMove( event ) {
       var vector = new THREE.Vector3();
       var camera_vector = camera.getWorldDirection(vector);
 
-      //rotate according to the axis
-      switch(axis_name) {
-        case 'x':
-          if(camera_vector.x > 0) direction = direction * -1
-          Character.rotateChildrenOfObject(part, new THREE.Vector3(1, 0, 0), direction*THREE.Math.radToDeg(angle_in_radians), character)
-          break;
-        case 'y':
-          if(camera_vector.y > 0) direction = direction * -1
-          Character.rotateChildrenOfObject(part, new THREE.Vector3(0, 1, 0), direction*THREE.Math.radToDeg(angle_in_radians), character)
-          break;
-        case 'z':
-          if(camera_vector.z > 0) direction = direction * -1
-          Character.rotateChildrenOfObject(part, new THREE.Vector3(0, 0, 1), direction*THREE.Math.radToDeg(angle_in_radians), character)
-          break;
-      }
+      if(part && direction && angle_in_radians && character) {
+        //rotate according to the axis
+        switch(axis_name) {
+          case 'x':
+            if(camera_vector.x > 0) direction = direction * -1
+            Character.rotateChildrenOfObject(part, new THREE.Vector3(1, 0, 0), direction*THREE.Math.radToDeg(angle_in_radians), character)
+            break;
+          case 'y':
+            if(camera_vector.y > 0) direction = direction * -1
+            Character.rotateChildrenOfObject(part, new THREE.Vector3(0, 1, 0), direction*THREE.Math.radToDeg(angle_in_radians), character)
+            break;
+          case 'z':
+            if(camera_vector.z > 0) direction = direction * -1
+            Character.rotateChildrenOfObject(part, new THREE.Vector3(0, 0, 1), direction*THREE.Math.radToDeg(angle_in_radians), character)
+            break;
+        }
+      } 
   
       if(newPos.x == lastClickPos.x && newPos.y == lastClickPos.y) {
         //

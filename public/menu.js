@@ -105,3 +105,24 @@ slider.oninput = function() {
     slider_text.innerHTML = 'x'+this.value/100;
     playerManager.speed = this.value/100 
 } 
+
+document.getElementById('inputfile2').onchange = function(evt) {
+    try {
+        let files = evt.target.files;
+        if (!files.length) {
+            alert('No file selected!');
+            return;
+        }
+        for (var file of files) {
+            let reader = new FileReader();
+            const self = this;
+            reader.onload = (event) => {
+                frameManager.loadAnimation(JSON.parse(event.target.result))
+            };
+            reader.readAsText(file);
+        }
+        
+    } catch (err) {
+        console.error(err);
+    }
+}
