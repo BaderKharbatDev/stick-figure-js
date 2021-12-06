@@ -1,9 +1,10 @@
 import * as THREE from '/build/three.module.js';
+import {menuOffset} from '/render.js';
 
 export default class Helper {
 
     static toScreenPosition(pos, camera) {
-            var w = window.innerWidth;
+            var w = window.innerWidth-menuOffset;
             var h = window.innerHeight;
 
             var vector = pos.project(camera);

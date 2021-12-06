@@ -1,12 +1,17 @@
+:root {
+  --menu_width: 200px;
+}
+
 canvas {
   position: fixed;
   top: 0;
-  left: 0;
+  left: var(--menu_width);
 
   margin: 0;
   padding: 0;
   z-index: 0;
 
+  /* transform: scaleX(-1); */
 }
 
 body {
@@ -19,9 +24,90 @@ html {
   margin: 0;
   padding: 0;
 }
-#slider{
-  z-index: 2;
+
+#frame-gui { 
+  position: absolute; 
+  top: 2px; 
+  left: var(--menu_width);
+}
+
+#menu {
+  position: fixed;
+  width: var(--menu_width);
+  height: 100%;
+  background-color: white;
+  border: 1px solid black;
+
+  top: 0;
+  left: 0;
+  margin: 0;
+  padding: 0;
+  z-index: 1;
+}
+
+.menu {
+  text-align: center;
+}
+
+#newMenu {
+  display: none;
+}
+
+.menu button{
+  margin: 10px;
+}
+
+.back {
   position: fixed;
   top: 0;
   left: 0;
 }
+
+#frame-bar {
+  position: fixed;
+  bottom: 0;
+  left: var(--menu_width);
+  width: calc(100% - 200px);
+  height: 100px;
+  background: rgba(255, 0, 0, 0.5);
+  z-index: 1;
+
+  display: none;
+  flex-direction: row;
+  align-items: center;
+  overflow: auto;
+}
+
+#frame-bar button {
+  height: 30px;
+  margin: 20px;
+  padding: 5px;
+  
+  text-align: center;
+}
+
+.custom-file-input::-webkit-file-upload-button {
+  visibility: hidden;
+}
+.custom-file-input::before {
+  content: 'Select some files';
+  display: inline-block;
+  background: -webkit-linear-gradient(top, #f9f9f9, #e3e3e3);
+  border: 1px solid #999;
+  border-radius: 3px;
+  padding: 5px 8px;
+  outline: none;
+  white-space: nowrap;
+  -webkit-user-select: none;
+  cursor: pointer;
+  text-shadow: 1px 1px #fff;
+  font-weight: 700;
+  font-size: 10pt;
+}
+.custom-file-input:hover::before {
+  border-color: black;
+}
+.custom-file-input:active::before {
+  background: -webkit-linear-gradient(top, #e3e3e3, #f9f9f9);
+}
+

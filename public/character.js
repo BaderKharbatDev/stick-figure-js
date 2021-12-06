@@ -9,35 +9,42 @@ class part {
     }
 }
 
+function newSphere(radius, color) {
+    var geometry = new THREE.SphereGeometry(radius, 24, 24)
+    geometry.computeBoundingSphere()
+    var sphere = new THREE.Mesh( geometry, new THREE.MeshStandardMaterial({ color: color}) )
+    return sphere
+}
+
 export default class character {
     gui;
     circleMenu = [];
 
     constructor() {
-        let radius = 3;
-        let arm_d = 20;
-        let leg_d = 25;
-        let tor_w = 30;
-        let tor_h = 50;
+        var radius = 3;
+        var arm_d = 20;
+        var leg_d = 25;
+        var tor_w = 30;
+        var tor_h = 50;
 
-        this.right_hand = new part( new THREE.Mesh( new THREE.SphereGeometry(radius, 24, 24), new THREE.MeshStandardMaterial({ color: 0x0000FF}) ), []);
-        this.left_hand = new part( new THREE.Mesh( new THREE.SphereGeometry(radius, 24, 24), new THREE.MeshStandardMaterial({ color: 0xadd8e6}) ), []);
-        this.right_foot = new part( new THREE.Mesh( new THREE.SphereGeometry(radius, 24, 24), new THREE.MeshStandardMaterial({ color: 0x0000FF}) ), []);
-        this.left_foot = new part( new THREE.Mesh( new THREE.SphereGeometry(radius, 24, 24), new THREE.MeshStandardMaterial({ color: 0xadd8e6}) ), []);
+        this.right_hand = new part( newSphere(radius, 0x0000FF), []);
+        this.left_hand = new part( new newSphere(radius, 0xFFFF00), []);
+        this.right_foot = new part( newSphere(radius, 0x0000FF), []);
+        this.left_foot = new part( new newSphere(radius, 0xFFFF00), []);
         
-        this.right_elbow = new part( new THREE.Mesh( new THREE.SphereGeometry(radius, 24, 24), new THREE.MeshStandardMaterial({ color: 0xadd8e6}) ), [this.right_hand]);
-        this.left_elbow = new part( new THREE.Mesh( new THREE.SphereGeometry(radius, 24, 24), new THREE.MeshStandardMaterial({ color: 0xadd8e6}) ), [this.left_hand]);
-        this.right_knee = new part( new THREE.Mesh( new THREE.SphereGeometry(radius, 24, 24), new THREE.MeshStandardMaterial({ color: 0xadd8e6}) ), [this.right_foot]);
-        this.left_knee = new part( new THREE.Mesh( new THREE.SphereGeometry(radius, 24, 24), new THREE.MeshStandardMaterial({ color: 0xadd8e6}) ), [this.left_foot]);
+        this.right_elbow = new part( new newSphere(radius, 0xFFFF00), [this.right_hand]);
+        this.left_elbow = new part( new newSphere(radius, 0xFFFF00), [this.left_hand]);
+        this.right_knee = new part( new newSphere(radius, 0xFFFF00), [this.right_foot]);
+        this.left_knee = new part( new newSphere(radius, 0xFFFF00), [this.left_foot]);
         
-        this.left_hip = new part(new THREE.Mesh( new THREE.SphereGeometry(radius, 24, 24), new THREE.MeshStandardMaterial({ color: 0xadd8e6 }) ), [this.left_knee]);
-        this.right_hip = new part(new THREE.Mesh( new THREE.SphereGeometry(radius, 24, 24), new THREE.MeshStandardMaterial({ color: 0xadd8e6 }) ), [this.right_knee]);
-        this.left_shoulder = new part(new THREE.Mesh( new THREE.SphereGeometry(radius, 24, 24), new THREE.MeshStandardMaterial({ color: 0xadd8e6 }) ), [this.left_elbow]);
-        this.right_shoulder = new part(new THREE.Mesh( new THREE.SphereGeometry(radius, 24, 24), new THREE.MeshStandardMaterial({ color: 0xadd8e6 }) ), [this.right_elbow]);
-        this.head = new part(new THREE.Mesh( new THREE.SphereGeometry(7, 24, 24), new THREE.MeshStandardMaterial({ color: 0xadd8e6 }) ), []);
-        this.neck = new part(new THREE.Mesh( new THREE.SphereGeometry(radius, 24, 24), new THREE.MeshStandardMaterial({ color: 0xadd8e6 }) ), [this.head]);
+        this.left_hip = new part(new newSphere(radius, 0xFFFF00), [this.left_knee]);
+        this.right_hip = new part(new newSphere(radius, 0xFFFF00), [this.right_knee]);
+        this.left_shoulder = new part(new newSphere(radius, 0xFFFF00), [this.left_elbow]);
+        this.right_shoulder = new part(new newSphere(radius, 0xFFFF00), [this.right_elbow]);
+        this.head = new part(new newSphere(7, 0xFFFF00), []);
+        this.neck = new part(new newSphere(radius, 0xFFFF00), [this.head]);
 
-        this.torso = new part(new THREE.Mesh( new THREE.SphereGeometry( radius, 24, 24 ), new THREE.MeshStandardMaterial( {color: 0xffd100} ) ), [this.neck, this.left_shoulder, this.right_shoulder, this.left_hip, this.right_hip])
+        this.torso = new part(new newSphere(radius, 0xFFFF00), [this.neck, this.left_shoulder, this.right_shoulder, this.left_hip, this.right_hip])
 
         //positions
         this.left_foot.mesh.position.set(1*tor_w/2-radius,radius,0);
@@ -59,7 +66,7 @@ export default class character {
         this.group = new THREE.Group();
         this.group.add(this.torso.mesh, this.head.mesh, this.neck.mesh, this.left_shoulder.mesh, this.right_shoulder.mesh, this.left_hip.mesh, this.right_hip.mesh, this.right_elbow.mesh, this.left_elbow.mesh, this.right_knee.mesh, this.left_knee.mesh, this.right_hand.mesh, this.left_hand.mesh, this.right_foot.mesh, this.left_foot.mesh)
         this.group.frustumCulled=false
-        // this.torso.mesh.visible = false
+
         this.lines = [];
         this.torso_mesh;
     }
@@ -76,6 +83,7 @@ export default class character {
         pos2 = new THREE.Vector3(parseFloat(pos2.x), parseFloat(pos2.y), parseFloat(pos2.z) )
 
         let geometry = new THREE.BufferGeometry().setFromPoints( [pos1, pos2] );
+        // geometry.computeBoundingSphere()
 
         let material = new THREE.LineBasicMaterial( { color: 0x000000 } );
         let line = new THREE.Line(geometry, material);
@@ -107,7 +115,9 @@ export default class character {
     updateTorso() {
         //first remove previous plane
         let scene = this.scene;
-        scene.remove(this.torso_mesh)
+        try {
+            scene.remove(this.torso_mesh)
+        } catch(error) {}
         this.torso_mesh = this.makeNewTorsoPlane(this.left_shoulder.mesh.position, this.left_hip.mesh.position, this.right_hip.mesh.position)
         this.torso_mesh.frustumCulled=false
         this.scene.add(this.torso_mesh)
@@ -135,11 +145,13 @@ export default class character {
         
         // preparation is complete, create a plane now
         const planeL = 50//2.15;
-        const planeW = 30//1.75;
+        const planeW = 27//1.75;
         
         var geometry = new THREE.PlaneGeometry(planeL, planeW, 32);
+        geometry.computeBoundingSphere()
+
         var material3 = new THREE.MeshStandardMaterial({
-            color: 0xadd8e6,
+            color: 0xFFFF00,
             side: THREE.DoubleSide
         });
         var plane = new THREE.Mesh(geometry, material3);
@@ -273,11 +285,14 @@ export default class character {
 
     closeMenu(scene) {
         this.closeAxisMenu(scene)
-        this.gui.destroy();
+        if(this.gui) {
+            this.gui.domElement.remove();
+        }
     }
 
     static createCircle(scene, size, color, xR, yR, zR, x, y, z, name) {
       const geometry = new THREE.CircleGeometry( size, 100 );
+      geometry.computeBoundingSphere()
       const material = new THREE.MeshBasicMaterial( { color: color, side: THREE.DoubleSide, transparent: true, opacity: 0.7} );
       const circle = new THREE.Mesh( geometry, material );
       circle.position.set(x, y, z)
@@ -305,11 +320,64 @@ export default class character {
         this.circleMenu.push( this.constructor.createCircle(scene, 10, green, Math.PI / 2, 0, 0, part.mesh.position.x, part.mesh.position.y, part.mesh.position.z, 'y'))
     }
 
-    closeAxisMenu(scene) {
+    closeAxisMenu() {
+        var scene = this.scene
         for(var i = 0; i<this.circleMenu.length; i++) {
             scene.remove(this.circleMenu[i])
         }
         this.circleMenu = [];
+    }
+
+    posHelper(pos) {
+        return new THREE.Vector3(pos.x, pos.y, pos.z)
+    }
+
+    getPlayerJointPositions() {
+        return {
+            'left_foot': new THREE.Vector3(this.left_foot.mesh.position.x, this.left_foot.mesh.position.y, this.left_foot.mesh.position.z),
+            'right_foot': new THREE.Vector3(this.right_foot.mesh.position.x, this.right_foot.mesh.position.y, this.right_foot.mesh.position.z),
+            'left_knee': new THREE.Vector3(this.left_knee.mesh.position.x, this.left_knee.mesh.position.y, this.left_knee.mesh.position.z),
+            'right_knee': new THREE.Vector3(this.right_knee.mesh.position.x, this.right_knee.mesh.position.y, this.right_knee.mesh.position.z),
+            'left_hip': new THREE.Vector3(this.left_hip.mesh.position.x, this.left_hip.mesh.position.y, this.left_hip.mesh.position.z),
+            'right_hip': new THREE.Vector3(this.right_hip.mesh.position.x, this.right_hip.mesh.position.y, this.right_hip.mesh.position.z),
+            'torso': new THREE.Vector3(this.torso.mesh.position.x, this.torso.mesh.position.y, this.torso.mesh.position.z),
+            'left_shoulder': new THREE.Vector3(this.left_shoulder.mesh.position.x, this.left_shoulder.mesh.position.y, this.left_shoulder.mesh.position.z),
+            'right_shoulder': new THREE.Vector3(this.right_shoulder.mesh.position.x, this.right_shoulder.mesh.position.y, this.right_shoulder.mesh.position.z),
+            'left_elbow': new THREE.Vector3(this.left_elbow.mesh.position.x, this.left_elbow.mesh.position.y, this.left_elbow.mesh.position.z),
+            'right_elbow': new THREE.Vector3(this.right_elbow.mesh.position.x, this.right_elbow.mesh.position.y, this.right_elbow.mesh.position.z),
+            'left_hand': new THREE.Vector3(this.left_hand.mesh.position.x, this.left_hand.mesh.position.y, this.left_hand.mesh.position.z),
+            'right_hand': new THREE.Vector3(this.right_hand.mesh.position.x, this.right_hand.mesh.position.y, this.right_hand.mesh.position.z),
+            'neck': new THREE.Vector3(this.neck.mesh.position.x, this.neck.mesh.position.y, this.neck.mesh.position.z),
+            'head': new THREE.Vector3(this.head.mesh.position.x, this.head.mesh.position.y, this.head.mesh.position.z)
+        }
+    }
+
+    changePartPos(mesh, position) {
+        mesh.position.x = position.x;
+        mesh.position.y = position.y;
+        mesh.position.z = position.z;
+    }
+
+    applyNewPlayerPosition(newPositions) {
+        this.closeMenu()
+        this.changePartPos(this.left_foot.mesh, newPositions['left_foot'])
+        this.changePartPos(this.right_foot.mesh, newPositions['right_foot'])
+        this.changePartPos(this.left_knee.mesh, newPositions['left_knee'])
+        this.changePartPos(this.right_knee.mesh, newPositions['right_knee'])
+        this.changePartPos(this.left_hip.mesh, newPositions['left_hip'])
+        this.changePartPos(this.right_hip.mesh, newPositions['right_hip'])
+        this.changePartPos(this.torso.mesh, newPositions['torso'])
+        this.changePartPos(this.left_shoulder.mesh, newPositions['left_shoulder'])
+        this.changePartPos(this.right_shoulder.mesh, newPositions['right_shoulder'])
+        this.changePartPos(this.left_elbow.mesh, newPositions['left_elbow'])
+        this.changePartPos(this.right_elbow.mesh, newPositions['right_elbow'])
+        this.changePartPos(this.left_hand.mesh, newPositions['left_hand'])
+        this.changePartPos(this.right_hand.mesh, newPositions['right_hand'])
+        this.changePartPos(this.neck.mesh, newPositions['neck'])
+        this.changePartPos(this.head.mesh, newPositions['head'])
+
+        this.drawCharacterLines()
+        this.updateTorso()
     }
 }
 
