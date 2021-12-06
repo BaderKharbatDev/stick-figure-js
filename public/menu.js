@@ -126,3 +126,4 @@ document.getElementById('inputfile2').onchange = function(evt) {
         console.error(err);
     }
 }
+

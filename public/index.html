@@ -14,19 +14,30 @@
       <div class="menu" id='mainMenu'>
         <h3 style="margin-top: 50px;">Tricking Visualizer</h3>
         <button id='new-menu-b' style="position: absolute; left: 30px; bottom: 30px;">New Movement</button>
+
+        <script type="module" src="/dropdown.js"></script>
         
-        <label class="btn btn-primary" style="padding: 3px; margin: 0px; margin-top: 20px;">
+        <label class="btn btn-primary" style="padding: 5px; margin: 0px; margin-top: 20px; padding-left: 15px; padding-right: 15px;">
           <i class="fa" style="padding: 0px; margin: 0px;"></i> Load Move Files<input type="file" style="display: none; padding: 0px; margin: 0px;" name="image" id='inputfile'>
         </label>
 
-        <div style="display: flex; flex-direction: row; justify-content: space-evenly; align-items: center; margin-left: 30px; margin-right: 30px;">
+        <div class="dropdown">
+          <div id="myDropdown" class="dropdown-content">
+            <input type="text" placeholder="Add Trick..." id="dropdown">
+          </div>
+        </div> 
+        
+        <ul id="trick_list">
+
+        </ul>
+
+        <div style="display: flex; flex-direction: row; justify-content: space-evenly; align-items: center; margin-left: 30px; margin-right: 30px; margin-top: 30px;">
           <input type="range" min="25" max="150" value="100" id="play_speed" style="width: 50%;">
           <p id='speed-text' style="margin-top: 9px; margin-left: 7px;">x1.0</p>
         </div>
 
         <button id="play_a_b">Play Animation</button>
-        <!-- <h3 style="margin-top: 20px;">List</h3>
-        <input type="text" placeholder="Trick" minlength="4" maxlength="8" size="10"> -->
+
       </div>
       <div class="menu" id='newMenu'>
         <button class="back" id="back-b">back</button>
