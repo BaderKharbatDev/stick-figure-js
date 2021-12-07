@@ -127,3 +127,13 @@ document.getElementById('inputfile2').onchange = function(evt) {
     }
 }
 
+const checkbox = document.getElementById('side')
+checkbox.checked = true;
+
+checkbox.addEventListener('change', (event) => {
+  if (event.currentTarget.checked) {
+    document.getElementById('bg').style.transform = 'scaleX(1)'
+  } else {
+    document.getElementById('bg').style.transform = 'scaleX(-1)'
+  }
+})
