@@ -50,7 +50,7 @@ function addPlane() {
   let width = 10000;
   var front = new THREE.Mesh(new THREE.BoxGeometry(width, 10, length), new THREE.MeshStandardMaterial({ color: 0xCCCCFF }))
   front.position.set(0, -5, length / 2)
-  var back = new THREE.Mesh(new THREE.BoxGeometry(width, 10, length), new THREE.MeshStandardMaterial({ color: 0xf4f0ec }))
+  var back = new THREE.Mesh(new THREE.BoxGeometry(width, 10, length), new THREE.MeshStandardMaterial({ color: 0xffffff }))
   back.position.set(0, -5, -1 * length / 2)
   front.receiveShadow = true;
   back.receiveShadow = true;
