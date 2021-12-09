@@ -42,13 +42,16 @@ for(var i=0; i<l.length; i++) {
 
 var tricks_json = {
     "Aerial": './tricks/darkside_aerial.json',
+    "Backstep": './tricks/darkside_backstep.json',
+    "Frontstep": './tricks/darkside_frontstep.json',
     "Backhand Spring": './tricks/darkside_backhandspring.json',
     "Backhand Spring Step Out": './tricks/darkside_backhandspring_stepout.json',
     "Btwist": './tricks/darkside_btwist.json',
     "Cartwheel": './tricks/darkside_cartwheel.json',
     "Cheat Gainer": './tricks/darkside_cheatgainer.json',
-    "Cork": './tricks/darkside_cork.json',
     "Cheat 9": './tricks/darkside_c9.json',
+    "Cheat 7": '/tricks/darkside_c7.json',
+    "Cork": './tricks/darkside_cork.json',
     "Master Scoot": './tricks/darkside_masterscoot.json',
     "Flashkick": './tricks/darkside_flashkick.json',
     "Full": './tricks/darkside_full.json',
@@ -59,6 +62,7 @@ var tricks_json = {
     "Step Over Hook": './tricks/darkside_step_over_hook.json',
     "TDR": './tricks/darkside_tdr.json',
     "Tornado": './tricks/darkside_tornado.json',
+    "540": './tricks/darkside_540.json'
 }
 
 for (let key in tricks_json) {

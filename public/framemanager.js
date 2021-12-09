@@ -79,6 +79,7 @@ export default class FrameManager {
     }
 
     play() {
+        if(this.playing) return
         this.saveCurrentKeyFrame()
         var last_ind = 0;
         for(var i = 0; i < this.frames.length; i++) {
