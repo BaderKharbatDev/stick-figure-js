@@ -55,6 +55,7 @@ var tricks_json = {
     "Master Scoot": './tricks/darkside_masterscoot.json',
     "Flashkick": './tricks/darkside_flashkick.json',
     "Full": './tricks/darkside_full.json',
+    "Gainer Switch": './tricks/darkside_gainerswitch.json',
     "Hook Kick": './tricks/darkside_hook.json',
     "Raiz": './tricks/darkside_raiz.json',
     "Round Kick": './tricks/darkside_round.json',
