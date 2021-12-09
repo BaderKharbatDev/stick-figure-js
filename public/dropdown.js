@@ -46,6 +46,7 @@ var tricks_json = {
     "Frontstep": './tricks/darkside_frontstep.json',
     "Backhand Spring": './tricks/darkside_backhandspring.json',
     "Backhand Spring Step Out": './tricks/darkside_backhandspring_stepout.json',
+    "Back Tuck": './tricks/darkside_backtuck.json',
     "Btwist": './tricks/darkside_btwist.json',
     "Cartwheel": './tricks/darkside_cartwheel.json',
     "Cheat Gainer": './tricks/darkside_cheatgainer.json',
@@ -54,15 +55,19 @@ var tricks_json = {
     "Cork": './tricks/darkside_cork.json',
     "Master Scoot": './tricks/darkside_masterscoot.json',
     "Flashkick": './tricks/darkside_flashkick.json',
+    "Front Sweep": './tricks/darkside_frontsweep.json',
     "Full": './tricks/darkside_full.json',
     "Gainer Switch": './tricks/darkside_gainerswitch.json',
     "Hook Kick": './tricks/darkside_hook.json',
     "Raiz": './tricks/darkside_raiz.json',
     "Round Kick": './tricks/darkside_round.json',
+    "Round Off": './tricks/darkside_roundoff.json',
     "Scoot": './tricks/darkside_scoot.json',
+    "Side Swipe": './tricks/darkside_sideswipe.json',
     "Step Over Hook": './tricks/darkside_step_over_hook.json',
     "TDR": './tricks/darkside_tdr.json',
     "Tornado": './tricks/darkside_tornado.json',
+    "Webster": '/tricks/darkside_webster.json',
     "540": './tricks/darkside_540.json'
 }
 
