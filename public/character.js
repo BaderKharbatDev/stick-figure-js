@@ -82,14 +82,18 @@ export default class character {
         pos1 = new THREE.Vector3(parseFloat(pos1.x), parseFloat(pos1.y), parseFloat(pos1.z) )
         pos2 = new THREE.Vector3(parseFloat(pos2.x), parseFloat(pos2.y), parseFloat(pos2.z) )
 
-        let geometry = new THREE.BufferGeometry().setFromPoints( [pos1, pos2] );
-        // geometry.computeBoundingSphere()
+        // let geometry = new THREE.BufferGeometry().setFromPoints( [pos1, pos2] );
+        // // geometry.computeBoundingSphere()
 
-        let material = new THREE.LineBasicMaterial( { color: 0x000000 } );
-        let line = new THREE.Line(geometry, material);
-        line.frustumCulled=false
+        // let material = new THREE.LineBasicMaterial( { color: 0x000000 } );
+        // let line = new THREE.Line(geometry, material);
+        // line.frustumCulled=false
+        // this.lines.push(line)
+        // return line;
+
+        let line = this.cylinderMesh(pos1, pos2)
         this.lines.push(line)
-        return line;
+        return line
     }
 
     //character drawing helpers
@@ -111,6 +115,26 @@ export default class character {
         scene.add(this.#makeLine(this.left_elbow.mesh.position, this.left_hand.mesh.position))
         scene.add(this.#makeLine(this.neck.mesh.position, this.head.mesh.position))
     }
+
+    cylinderMesh = function (pointX, pointY) {
+        // edge from X to Y
+        var direction = new THREE.Vector3().subVectors(pointY, pointX);
+        const material = new THREE.MeshStandardMaterial({ color: 0xFFFF00 });
+        // Make the geometry (of "direction" length)
+        var geometry = new THREE.CylinderGeometry(3, 3, direction.length(), 6, 4, true);
+        // shift it so one end rests on the origin
+        geometry.applyMatrix4(new THREE.Matrix4().makeTranslation(0, direction.length() / 2, 0));
+        // rotate it the right way for lookAt to work
+        geometry.applyMatrix4(new THREE.Matrix4().makeRotationX(THREE.Math.degToRad(90)));
+        // Make a mesh with the geometry
+        var mesh = new THREE.Mesh(geometry, material);
+        // Position it where we want
+        mesh.position.copy(pointX);
+        // And make it point to where we want
+        mesh.lookAt(pointY);
+     
+        return mesh;
+     }
 
     updateTorso() {
         //first remove previous plane
