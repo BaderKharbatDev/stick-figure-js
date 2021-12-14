@@ -32,6 +32,10 @@ function toggleMenus() {
     if(getStyle('newMenu', 'display') == 'none') {
         window['globalvars'].isAnimating = false;
         frameManager.character.closeMenu()
+        frameManager.character
+        if(frameManager.character.gui) {
+            frameManager.character.gui.domElement.remove();
+        }
     } else {
         window['globalvars'].isAnimating = true;
     }

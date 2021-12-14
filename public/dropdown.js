@@ -74,6 +74,7 @@ var tricks_json = {
     "Round Off": './tricks/darkside_roundoff.json',
     "Scoot": './tricks/darkside_scoot.json',
     "Side Swipe": './tricks/darkside_sideswipe.json',
+    "Snatch Cannon": './tricks/darkside_snatchcannon.json',
     "Step Over Hook": './tricks/darkside_step_over_hook.json',
     "Swing 9": './tricks/darkside_swing9.json',
     "Swing 3": './tricks/darkside_swing3.json',

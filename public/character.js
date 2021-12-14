@@ -256,63 +256,64 @@ export default class character {
 
         this.makeAxisMenu(character.scene, part)
 
-        this.gui = new GUI();
-        const xFolder = this.gui.addFolder('X Axis')
-        var x = { 
-            AnglePos:function() {
-                this_class.rotateChildrenOfObject(part, new THREE.Vector3(1, 0, 0), 10, character)
-            },
-            AngleNeg:function() {
-                this_class.rotateChildrenOfObject(part, new THREE.Vector3(1, 0, 0), -10, character)
-            }
-        };
-        xFolder.add(x, 'AnglePos')
-        xFolder.add(x, 'AngleNeg')
-        const yFolder = this.gui.addFolder('Y Axis')
-        var y = { 
-            AnglePos:function(){
-                this_class.rotateChildrenOfObject(part, new THREE.Vector3(0, 1, 0), 10, character)
-            },
-            AngleNeg:function(){
-                this_class.rotateChildrenOfObject(part, new THREE.Vector3(0, 1, 0), -10, character)
-            }
-        };
-        yFolder.add(y, 'AnglePos')
-        yFolder.add(y, 'AngleNeg')
-        const zFolder = this.gui.addFolder('Z Axis')
-        var z = { 
-            AnglePos:function(){
-                this_class.rotateChildrenOfObject(part, new THREE.Vector3(0, 0, 1), 10, character)
-            },
-            AngleNeg:function(){
-                this_class.rotateChildrenOfObject(part, new THREE.Vector3(0, 0, 1), -10, character)
-            }
-        };
-        zFolder.add(z, 'AnglePos')
-        zFolder.add(z, 'AngleNeg')
-        xFolder.open()
-        yFolder.open()
-        zFolder.open()
-
-        const moveFolder = this.gui.addFolder('Move Character')
-        var move = { 
-            up:function(){
-                character.moveCharacterUpOrDown(1);
-            },
-            down:function(){
-                character.moveCharacterUpOrDown(-1);
-            }
-        };
-        moveFolder.add(move, 'up')
-        moveFolder.add(move, 'down')
-        moveFolder.open()
+        // const xFolder = this.gui.addFolder('X Axis')
+        // var x = { 
+        //     AnglePos:function() {
+        //         this_class.rotateChildrenOfObject(part, new THREE.Vector3(1, 0, 0), 10, character)
+        //     },
+        //     AngleNeg:function() {
+        //         this_class.rotateChildrenOfObject(part, new THREE.Vector3(1, 0, 0), -10, character)
+        //     }
+        // };
+        // xFolder.add(x, 'AnglePos')
+        // xFolder.add(x, 'AngleNeg')
+        // const yFolder = this.gui.addFolder('Y Axis')
+        // var y = { 
+        //     AnglePos:function(){
+        //         this_class.rotateChildrenOfObject(part, new THREE.Vector3(0, 1, 0), 10, character)
+        //     },
+        //     AngleNeg:function(){
+        //         this_class.rotateChildrenOfObject(part, new THREE.Vector3(0, 1, 0), -10, character)
+        //     }
+        // };
+        // yFolder.add(y, 'AnglePos')
+        // yFolder.add(y, 'AngleNeg')
+        // const zFolder = this.gui.addFolder('Z Axis')
+        // var z = { 
+        //     AnglePos:function(){
+        //         this_class.rotateChildrenOfObject(part, new THREE.Vector3(0, 0, 1), 10, character)
+        //     },
+        //     AngleNeg:function(){
+        //         this_class.rotateChildrenOfObject(part, new THREE.Vector3(0, 0, 1), -10, character)
+        //     }
+        // };
+        // zFolder.add(z, 'AnglePos')
+        // zFolder.add(z, 'AngleNeg')
+        // xFolder.open()
+        // yFolder.open()
+        // zFolder.open()
+        if(!this.gui) {
+            this.gui = new GUI();
+            const moveFolder = this.gui.addFolder('Move Character')
+            var move = { 
+                up:function(){
+                    character.moveCharacterUpOrDown(1);
+                },
+                down:function(){
+                    character.moveCharacterUpOrDown(-1);
+                }
+            };
+            moveFolder.add(move, 'up')
+            moveFolder.add(move, 'down')
+            moveFolder.open()
+        }
     }
 
     closeMenu(scene) {
         this.closeAxisMenu(scene)
-        if(this.gui) {
-            this.gui.domElement.remove();
-        }
+        // if(this.gui) {
+        //     this.gui.domElement.remove();
+        // }
     }
 
     static createCircle(scene, size, color, xR, yR, zR, x, y, z, name) {
