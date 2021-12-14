@@ -305,6 +305,7 @@ export default class character {
         };
         moveFolder.add(move, 'up')
         moveFolder.add(move, 'down')
+        moveFolder.open()
     }
 
     closeMenu(scene) {
